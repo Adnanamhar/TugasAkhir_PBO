@@ -1,9 +1,9 @@
-package org.example.demo;
+package org.example.demo.student;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-public class loginStudent extends Application {
+public class MenuStudent extends Application {
 
     public static void main(String[] args) {
         launch(args);
