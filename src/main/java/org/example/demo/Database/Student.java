@@ -1,4 +1,5 @@
-package org.example.demo.database;
+package org.example.demo.Database;
+
 public class Student {
 
     private String name, nim, faculty, program;

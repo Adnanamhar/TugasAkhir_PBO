@@ -1,4 +1,4 @@
-package org.example.demo.database;
+package org.example.demo.Database;
 
 public class Book {
 

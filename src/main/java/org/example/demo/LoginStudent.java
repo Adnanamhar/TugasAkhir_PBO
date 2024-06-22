@@ -9,10 +9,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import org.example.demo.database.Book;
-import org.example.demo.database.Student;
-import org.example.demo.database.User;
-import org.example.demo.student.MenuStudent;
+import org.example.demo.Database.Book;
+import org.example.demo.Database.Student;
+import org.example.demo.Database.User;
+import org.example.demo.Student.MenuStudent;
 
 public class LoginStudent extends Application {
 
@@ -24,9 +24,9 @@ public class LoginStudent extends Application {
     }
 
     public static void addTempBooks() {
-        User.books.add(new Book("a001", "title", "author", "History", 4));
-        User.books.add(new Book("b002", "title", "author", "Story",0));
-        User.books.add(new Book("c003", "title", "author", "Text", 1));
+        User.books.add(new Book("2455-4232-4567", "title", "author", "History", 4));
+        User.books.add(new Book("2454-2332-4987", "title", "author", "Story",0));
+        User.books.add(new Book("2765-7652-4097", "title", "author", "Text", 1));
     }
 
     @Override
