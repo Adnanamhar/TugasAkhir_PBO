@@ -1,6 +1,7 @@
 package org.example.demo.Student;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.stage.Stage;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,8 +14,14 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.stage.Popup;
+import javafx.util.Duration;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import org.example.demo.Database.Book;
 import org.example.demo.Database.User;
 
@@ -103,7 +110,7 @@ public class Borrowed extends Application {
         errorLabel.setPrefSize(292.0, 17.0);
         errorLabel.setTextFill(Color.RED);
 
-        Button okButton = new Button("OKE");
+        Button okButton = new Button("OK");
         okButton.setLayoutX(603.0);
         okButton.setLayoutY(37.0);
         okButton.setPrefSize(40.0, 40.0);
@@ -115,6 +122,7 @@ public class Borrowed extends Application {
             String inputID = bookIdField.getText();
             if(inputID.isEmpty()) {
                 errorLabel.setText("ID empty");
+                showPopupNotification(primaryStage, "ID empty");
                 return;
             }
 
@@ -129,7 +137,8 @@ public class Borrowed extends Application {
                                 if(User.books.get(k).getId_buku().equals(inputID)) {
                                     User.books.get(k).setStock(User.books.get(k).getStock() + 1);
                                     start(primaryStage);
-                                    break;
+                                    showPopupNotification(primaryStage, "Book returned successfully!");
+                                    return;
                                 }
                             }
                             break;
@@ -138,14 +147,41 @@ public class Borrowed extends Application {
                 }
             }
             if(!find) {
-                errorLabel.setText("Book ID not found20231");
+                errorLabel.setText("Book ID not found");
+                showPopupNotification(primaryStage, "Book ID not found");
             }
         });
 
         Scene scene = new Scene(root);
-        primaryStage.setTitle("Borrow Book");
+        primaryStage.setTitle("Return Book");
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    private void showPopupNotification(Stage ownerStage, String message) {
+        Popup popup = new Popup();
+        popup.setAutoHide(true);
+
+        VBox popupContent = new VBox();
+        popupContent.setPadding(new Insets(10));
+        popupContent.setStyle("-fx-background-color: #000000; -fx-background-radius: 10;");
+
+        Text messageText = new Text(message);
+        messageText.setFill(Color.WHITE);
+        popupContent.getChildren().add(messageText);
+
+        popup.getContent().add(popupContent);
+
+        // Calculate position to show popup at the bottom center of the screen
+        double xPos = ownerStage.getX() + (ownerStage.getWidth() / 2) - (popupContent.getWidth() / 2);
+        double yPos = ownerStage.getY() + ownerStage.getHeight() - popupContent.getHeight() - 10;
+
+        popup.show(ownerStage, xPos, yPos);
+
+        // Hide popup after 3 seconds
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> popup.hide()));
+        timeline.setCycleCount(1);
+        timeline.play();
     }
 
     public static void main(String[] args) {
