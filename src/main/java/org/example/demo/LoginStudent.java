@@ -13,20 +13,19 @@ import org.example.demo.Database.Book;
 import org.example.demo.Database.Student;
 import org.example.demo.Database.User;
 import org.example.demo.Student.MenuStudent;
-
 public class LoginStudent extends Application {
 
     public static boolean sudahTambah = false;
 
     public static void addTempStudent(){
         User.students.add(new Student("adnan", "202310370311001",  "Teknik", "Informatika"));
-        User.students.add(new Student("pahmi", "202310370311041", "FK", "Kedokteran"));
+        User.students.add(new Student("fahmi", "202310370311041", "FK", "Kedokteran"));
     }
 
     public static void addTempBooks() {
-        User.books.add(new Book("2455-4232-4567", "title", "author", "History", 4));
-        User.books.add(new Book("2454-2332-4987", "title", "author", "Story",0));
-        User.books.add(new Book("2765-7652-4097", "title", "author", "Text", 1));
+        User.books.add(new Book("388c-e681-9152", "title", "author", "History", 4));
+        User.books.add(new Book("ed90-be30-5cdb", "title", "author", "Story",0));
+        User.books.add(new Book("d95e-0c4a-9523", "title", "author", "Text", 1));
     }
 
     @Override

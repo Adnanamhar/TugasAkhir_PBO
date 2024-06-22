@@ -61,3 +61,4 @@ public class Book {
         this.duration = duration;
     }
 }
+
