@@ -72,7 +72,7 @@ public class LoginAdmin extends Application {
                 errorLabel.setText("Password empty");
                 return;
             }
-            if(username.equals("adnan") || username.equals("pahmi") && password.equals("admin")) {
+            if(username.equals("adnan") && password.equals("admin")) {
                 MenuAdmin menuAdmin = new MenuAdmin();
                 menuAdmin.start(primaryStage);
             }else {
