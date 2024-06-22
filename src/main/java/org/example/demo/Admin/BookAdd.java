@@ -8,8 +8,15 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.stage.Popup;
+import javafx.util.Duration;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.geometry.Insets;
 import org.example.demo.Database.Book;
 import org.example.demo.Database.User;
 
@@ -112,14 +119,17 @@ public class BookAdd extends Application {
             String category = categoryComboBox.getSelectionModel().getSelectedItem();
             if(title.isEmpty()){
                 errorLabel.setText("Title empty");
+                showPopupNotification(primaryStage, "Title empty");
                 return;
             }
             if(author.isEmpty()) {
                 errorLabel.setText("Author empty");
+                showPopupNotification(primaryStage, "Author empty");
                 return;
             }
             if(stockTextField.getText().isEmpty()) {
                 errorLabel.setText("Stock empty");
+                showPopupNotification(primaryStage, "Stock empty");
                 return;
             }
             int stock = 0;
@@ -127,11 +137,13 @@ public class BookAdd extends Application {
                 stock = Integer.parseInt(stockTextField.getText());
             }catch (Exception e) {
                 errorLabel.setText("Stock must be digits");
+                showPopupNotification(primaryStage, "Stock must be digits");
                 return;
             }
 
             String id = generateId();
             User.books.add(new Book(id, title, author, category, stock));
+            showPopupNotification(primaryStage, "Book added successfully!");
             MenuAdmin menuAdmin = new MenuAdmin();
             menuAdmin.start(primaryStage);
         });
@@ -158,6 +170,32 @@ public class BookAdd extends Application {
                 uuidString.substring(14, 18);
 
         return formattedID;
+    }
+
+    private void showPopupNotification(Stage ownerStage, String message) {
+        Popup popup = new Popup();
+        popup.setAutoHide(true);
+
+        VBox popupContent = new VBox();
+        popupContent.setPadding(new Insets(10));
+        popupContent.setStyle("-fx-background-color: #000000; -fx-background-radius: 10;");
+
+        Text messageText = new Text(message);
+        messageText.setFill(Color.WHITE);
+        popupContent.getChildren().add(messageText);
+
+        popup.getContent().add(popupContent);
+
+        // Calculate position to show popup at the bottom center of the screen
+        double xPos = ownerStage.getX() + (ownerStage.getWidth() / 2) - (popupContent.getWidth() / 2);
+        double yPos = ownerStage.getY() + ownerStage.getHeight() - popupContent.getHeight() - 10;
+
+        popup.show(ownerStage, xPos, yPos);
+
+        // Hide popup after 3 seconds
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> popup.hide()));
+        timeline.setCycleCount(1);
+        timeline.play();
     }
 
     public static void main(String[] args) {

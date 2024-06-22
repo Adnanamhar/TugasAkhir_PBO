@@ -1,14 +1,21 @@
 package org.example.demo.Admin;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.stage.Popup;
+import javafx.util.Duration;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import org.example.demo.Database.Student;
 import org.example.demo.Database.User;
 
@@ -96,31 +103,37 @@ public class StudentAdd extends Application {
 
             if(name.isEmpty()) {
                 errorLabel.setText("Name empty");
+                showPopupNotification(primaryStage, "Name empty");
                 return;
             }
             if(nim.isEmpty()) {
                 errorLabel.setText("NIM empty");
+                showPopupNotification(primaryStage, "NIM empty");
+                return;
+            }
+            if(!nim.matches("\\d+")) {
+                errorLabel.setText("NIM must be digits");
+                showPopupNotification(primaryStage, "NIM must be digits");
+                return;
+            }
+            if(nim.length() != 15) {
+                errorLabel.setText("NIM must be 15 digits");
+                showPopupNotification(primaryStage, "NIM must be 15 digits");
                 return;
             }
             if(faculty.isEmpty()) {
                 errorLabel.setText("Faculty empty");
+                showPopupNotification(primaryStage, "Faculty empty");
                 return;
             }
             if(program.isEmpty()) {
                 errorLabel.setText("Program empty");
-            }
-
-            if(nim.length() != 15) {
-                errorLabel.setText("NIM must be 15 digits");
-                return;
-            }
-
-            if(!nim.matches("\\d+")) {
-                errorLabel.setText("NIM must be digits");
+                showPopupNotification(primaryStage, "Program empty");
                 return;
             }
 
             User.students.add(new Student(name, nim, faculty, program));
+            showPopupNotification(primaryStage, "Student added successfully!");
             MenuAdmin menuAdmin = new MenuAdmin();
             menuAdmin.start(primaryStage);
         });
@@ -134,6 +147,32 @@ public class StudentAdd extends Application {
         primaryStage.setTitle("Add Student");
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    private void showPopupNotification(Stage ownerStage, String message) {
+        Popup popup = new Popup();
+        popup.setAutoHide(true);
+
+        VBox popupContent = new VBox();
+        popupContent.setPadding(new Insets(10));
+        popupContent.setStyle("-fx-background-color: #000000; -fx-background-radius: 10;");
+
+        Text messageText = new Text(message);
+        messageText.setFill(Color.WHITE);
+        popupContent.getChildren().add(messageText);
+
+        popup.getContent().add(popupContent);
+
+        // Calculate position to show popup at the bottom center of the screen
+        double xPos = ownerStage.getX() + (ownerStage.getWidth() / 2) - (popupContent.getWidth() / 2);
+        double yPos = ownerStage.getY() + ownerStage.getHeight() - popupContent.getHeight() - 10;
+
+        popup.show(ownerStage, xPos, yPos);
+
+        // Hide popup after 3 seconds
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> popup.hide()));
+        timeline.setCycleCount(1);
+        timeline.play();
     }
 
     public static void main(String[] args) {
