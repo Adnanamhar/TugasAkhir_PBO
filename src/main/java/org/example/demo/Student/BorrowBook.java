@@ -22,6 +22,7 @@ import javafx.stage.Popup;
 import javafx.util.Duration;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import org.example.demo.DarkLightMode;
 import org.example.demo.Database.Book;
 import org.example.demo.Database.User;
 
@@ -161,6 +162,9 @@ public class BorrowBook extends Application {
         primaryStage.setTitle("Borrow Book");
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        // Apply theme
+        DarkLightMode.applyTheme(root);
     }
 
     private void showPopupNotification(Stage ownerStage, String message) {

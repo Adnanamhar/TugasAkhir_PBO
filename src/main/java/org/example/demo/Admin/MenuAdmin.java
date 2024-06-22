@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
+import org.example.demo.DarkLightMode;
 import org.example.demo.LoginAdmin;
 
 public class MenuAdmin extends Application {
@@ -91,6 +92,9 @@ public class MenuAdmin extends Application {
         primaryStage.setTitle("Admin Menu");
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        // Apply theme
+        DarkLightMode.applyTheme(root);
     }
 
     public static void main(String[] args) {

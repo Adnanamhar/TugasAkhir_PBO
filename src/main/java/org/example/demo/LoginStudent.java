@@ -128,6 +128,9 @@ public class LoginStudent extends Application {
         primaryStage.setTitle("Login Form");
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        // Apply theme
+        DarkLightMode.applyTheme(root);
     }
 
     public static void main(String[] args) {

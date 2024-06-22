@@ -13,6 +13,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
+import org.example.demo.DarkLightMode;
 import org.example.demo.Database.Book;
 import org.example.demo.Database.User;
 
@@ -79,6 +80,9 @@ public class ListBook extends Application {
         primaryStage.setTitle("List Student");
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        // Apply theme
+        DarkLightMode.applyTheme(root);
     }
 
 

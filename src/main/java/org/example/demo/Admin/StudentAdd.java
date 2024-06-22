@@ -16,6 +16,7 @@ import javafx.stage.Popup;
 import javafx.util.Duration;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import org.example.demo.DarkLightMode;
 import org.example.demo.Database.Student;
 import org.example.demo.Database.User;
 
@@ -147,6 +148,9 @@ public class StudentAdd extends Application {
         primaryStage.setTitle("Add Student");
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        // Apply theme
+        DarkLightMode.applyTheme(root);
     }
 
     private void showPopupNotification(Stage ownerStage, String message) {

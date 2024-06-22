@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
+import org.example.demo.DarkLightMode;
 import org.example.demo.LoginStudent;
 
 public class MenuStudent extends Application {
@@ -60,6 +61,9 @@ public class MenuStudent extends Application {
         primaryStage.setTitle("Student Menu");
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        // Apply theme
+        DarkLightMode.applyTheme(root);
     }
 
     public static void main(String[] args) {

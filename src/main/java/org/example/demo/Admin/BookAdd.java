@@ -17,6 +17,7 @@ import javafx.util.Duration;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.geometry.Insets;
+import org.example.demo.DarkLightMode;
 import org.example.demo.Database.Book;
 import org.example.demo.Database.User;
 
@@ -159,6 +160,9 @@ public class BookAdd extends Application {
         primaryStage.setScene(scene);
         primaryStage.setTitle("Book List");
         primaryStage.show();
+
+        // Apply theme
+        DarkLightMode.applyTheme(root);
     }
 
     private static String generateId() {
