@@ -5,7 +5,7 @@ import javafx.scene.layout.Pane;
 
 public class DarkLightMode {
 
-    private static boolean isDarkMode = true;
+    private static boolean isDarkMode = false;
 
     private static final String LIGHT_THEME = "-fx-background-color: #ffffff; -fx-text-fill: #000000;";
     private static final String DARK_THEME = "-fx-background-color: #2b2b2b; -fx-text-fill: #ffffff;";
