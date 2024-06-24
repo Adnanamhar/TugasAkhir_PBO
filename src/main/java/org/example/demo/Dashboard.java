@@ -16,7 +16,11 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
+import javafx.stage.Screen;
+import javafx.geometry.Rectangle2D;
+
 import org.example.demo.Database.Book;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,11 +35,17 @@ public class Dashboard extends Application {
 
         Image backgroundImage = new Image("file:src/main/java/org/example/demo/Image/bg1.png");
         ImageView backgroundView = new ImageView(backgroundImage);
+        backgroundView.setPreserveRatio(false); // Tidak mempertahankan rasio aspek
+
         root.getChildren().add(backgroundView);
 
-        // Sesuaikan dengan lebar yang diinginkan
-        backgroundView.setFitWidth(800);
-        backgroundView.setFitHeight(600);
+        // Listener untuk menyesuaikan ukuran background ketika ukuran scene berubah
+        root.widthProperty().addListener((obs, oldVal, newVal) -> {
+            backgroundView.setFitWidth(newVal.doubleValue());
+        });
+        root.heightProperty().addListener((obs, oldVal, newVal) -> {
+            backgroundView.setFitHeight(newVal.doubleValue());
+        });
 
         // Top section
         HBox topSection = new HBox();
@@ -248,7 +258,14 @@ public class Dashboard extends Application {
         root.setTop(topSection);
         root.setCenter(centerSection);
 
-        Scene scene = new Scene(root, 800, 600);
+        // Mengambil ukuran layar utama
+        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+        primaryStage.setX(screenBounds.getMinX());
+        primaryStage.setY(screenBounds.getMinY());
+        primaryStage.setWidth(screenBounds.getWidth());
+        primaryStage.setHeight(screenBounds.getHeight());
+
+        Scene scene = new Scene(root, screenBounds.getWidth(), screenBounds.getHeight());
         primaryStage.setTitle("Perpustakaanku");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -270,7 +287,6 @@ public class Dashboard extends Application {
             }
         });
     }
-
 
     private List<Book> loadBooks() {
         // Mock data, replace with actual book data from database
