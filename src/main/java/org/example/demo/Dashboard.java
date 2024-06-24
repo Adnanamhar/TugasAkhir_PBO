@@ -148,8 +148,21 @@ public class Dashboard extends Application {
             helpPopup.hide();
         });
 
+        // Button to switch themes
+        Button switchButton = new Button("Switch Mode");
+        switchButton.getStyleClass().add("button");
+        VBox switchContent = new VBox(10);
+        switchContent.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, new CornerRadii(5), Insets.EMPTY)));
+        switchContent.setPadding(new Insets(10));
+        switchButton.setOnAction(event -> {
+            DarkLightMode.toggleTheme();
+            DarkLightMode.applyTheme(root);
+        });
+
+        root.getChildren().add(switchButton);
+
         // Right side buttons
-        HBox rightButtons = new HBox(10, signInButton, languageButton, helpButton);
+        HBox rightButtons = new HBox(10, signInButton, languageButton, helpButton,switchButton);
         rightButtons.setPadding(new Insets(10));
         rightButtons.setAlignment(Pos.TOP_RIGHT);
         HBox.setHgrow(rightButtons, Priority.ALWAYS);
@@ -187,7 +200,7 @@ public class Dashboard extends Application {
         // Load books (example)
         List<Book> books = loadBooks();
         if (!books.isEmpty()) {
-            Book book = books.get(0);
+            Book book = books.getFirst();
             VBox bookBox = new VBox(5);
             bookBox.setAlignment(Pos.CENTER);
 
@@ -245,7 +258,7 @@ public class Dashboard extends Application {
                 for (Circle c : navCircles) {
                     c.setFill(Paint.valueOf("white"));
                 }
-                circle.setFill(Paint.valueOf("black"));
+                circle.setFill(Paint.valueOf("grey"));
             });
             navCircles.add(circle);
             navigationControl.getChildren().add(circle);
