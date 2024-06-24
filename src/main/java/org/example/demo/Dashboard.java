@@ -169,13 +169,114 @@ public class Dashboard extends Application {
 
         sloganSection.getChildren().addAll(sloganLabel, centerSignInButton);
 
+        // Book display
+        VBox bookDisplay = new VBox(10);
+        bookDisplay.setAlignment(Pos.CENTER_RIGHT);
+        bookDisplay.setPadding(new Insets(10));
+
+        // Load books (example)
+        List<Book> books = loadBooks();
+        if (!books.isEmpty()) {
+            Book book = books.get(0);
+            VBox bookBox = new VBox(5);
+            bookBox.setAlignment(Pos.CENTER);
+
+            bookCover = new ImageView("file:src/main/java/org/example/demo/Image/buku1.png");
+            bookCover.setFitHeight(200);
+            bookCover.setFitWidth(150);
+
+            // Effect when mouse entered
+            bookCover.setOnMouseEntered(e -> {
+                bookCover.setFitHeight(220);
+                bookCover.setFitWidth(170);
+            });
+
+            bookCover.setOnMouseExited(e -> {
+                bookCover.setFitHeight(200);
+                bookCover.setFitWidth(150);
+            });
+
+            Label bookTitle = new Label(book.getTitle());
+            bookTitle.setFont(new Font(18));
+            bookTitle.setWrapText(true);
+
+            bookBox.getChildren().addAll(bookCover, bookTitle);
+            bookDisplay.getChildren().add(bookBox);
+        }
+
+        // Background images dan book covers
+        List<String> backgroundImages = List.of(
+                "file:src/main/java/org/example/demo/Image/bg1.png",
+                "file:src/main/java/org/example/demo/Image/bg2.png"
+        );
+
+        List<String> bookCovers = List.of(
+                "file:src/main/java/org/example/demo/Image/buku1.png",
+                "file:src/main/java/org/example/demo/Image/buku2.png"
+        );
+
+        // Circle navigation control
+        HBox navigationControl = new HBox(10);
+        navigationControl.setAlignment(Pos.CENTER);
+        navigationControl.setPadding(new Insets(10));
+
+        List<Circle> navCircles = new ArrayList<>();
+        for (int i = 0; i < backgroundImages.size(); i++) {
+            Circle circle = new Circle(10, i == 0 ? Paint.valueOf("black") : Paint.valueOf("white"));
+            final int index = i;
+            circle.setOnMouseClicked((MouseEvent e) -> {
+                // Ubah background image
+                backgroundView.setImage(new Image(backgroundImages.get(index)));
+
+                // Ubah book cover image
+                bookCover.setImage(new Image(bookCovers.get(index)));
+
+                // Perbarui warna circle
+                for (Circle c : navCircles) {
+                    c.setFill(Paint.valueOf("white"));
+                }
+                circle.setFill(Paint.valueOf("black"));
+            });
+            navCircles.add(circle);
+            navigationControl.getChildren().add(circle);
+        }
+
+        bookDisplay.getChildren().add(navigationControl);
+
+        centerSection.getChildren().addAll(sloganSection, bookDisplay);
+
+        root.setTop(topSection);
+        root.setCenter(centerSection);
+
+        Scene scene = new Scene(root, 800, 600);
+        primaryStage.setTitle("Perpustakaanku");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+
+        // DarkLight Mode (if needed)
+        DarkLightMode.applyTheme(root);
+
+        // Make the layout responsive
+        scene.widthProperty().addListener((obs, oldVal, newVal) -> {
+            double width = newVal.doubleValue();
+            if (width < 600) {
+                topSection.setSpacing(10);
+                centerSection.setSpacing(10);
+                sloganSection.setPadding(new Insets(10));
+            } else {
+                topSection.setSpacing(20);
+                centerSection.setSpacing(50);
+                sloganSection.setPadding(new Insets(50));
+            }
+        });
     }
+
 
     private List<Book> loadBooks() {
         // Mock data, replace with actual book data from database
         List<Book> books = new ArrayList<>();
         books.add(new Book("1", "Selalu Ada Cinta Di Setiap Cerita", "Author 1", "Category 1", 10));
-        books.add(new Book("2", "Nak, Kamu Gapapa Kan?", "Author 2", "Category 2", 5));
+        books.add(new Book("2", "Rentang Waktu", "Author 2", "Category 2", 5));
 
         return books;
     }
