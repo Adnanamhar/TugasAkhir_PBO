@@ -182,6 +182,8 @@ public class Dashboard extends Application {
         });
 
         root.getChildren().add(switchButton);
+        // DarkLight Mode (if needed)
+        DarkLightMode.applyTheme(root);
 
         // Label for current date and time
         Label dateTimeLabel = CurrentDateTimeApp.getCurrentDateTimeLabel();  // Dapatkan label dari CurrentDateTimeApp
@@ -307,9 +309,6 @@ public class Dashboard extends Application {
         primaryStage.setTitle("Perpustakaanku");
         primaryStage.setScene(scene);
         primaryStage.show();
-
-        // DarkLight Mode (if needed)
-        DarkLightMode.applyTheme(root);
 
         // Make the layout responsive
         scene.widthProperty().addListener((obs, oldVal, newVal) -> {

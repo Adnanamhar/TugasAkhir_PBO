@@ -5,12 +5,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import org.example.demo.Database.User;
 import org.example.demo.Student.MenuStudent;
+
 public class LoginStudent extends Application {
 
     @Override
@@ -82,13 +84,20 @@ public class LoginStudent extends Application {
                         User.loginStudent = nim;
                         MenuStudent menuStudent = new MenuStudent();
                         menuStudent.start(primaryStage);
-                    }else {
+                    } else {
                         errorLabel.setText("Incorrect password.");
                     }
                 }
             }
             if(!find) {
                 errorLabel.setText("NIM not found.");
+            }
+        });
+
+        // Add event handler for Enter key press
+        passwordTextField.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER) {
+                loginButton.fire();
             }
         });
 
@@ -102,6 +111,7 @@ public class LoginStudent extends Application {
             LoginAdmin loginAdmin = new LoginAdmin();
             loginAdmin.start(primaryStage);
         });
+
         // Add all components to the AnchorPane
         root.getChildren().addAll(titleLabel, nimLabel, passwordLabel, nimTextField, passwordTextField, loginButton, adminLoginButton, errorLabel);
 

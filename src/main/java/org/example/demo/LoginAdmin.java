@@ -6,10 +6,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.util.Duration;
 import org.example.demo.Admin.MenuAdmin;
 
 import java.time.LocalDateTime;
@@ -108,10 +108,23 @@ public class LoginAdmin extends Application {
                 attempts++;
                 lastAttemptTime = LocalDateTime.now();
                 if (attempts < 3) {
-                    errorLabel.setText("Username or password incorrect. Tersisa " + (3 - attempts));
+                    errorLabel.setText("Username or password incorrect. Tersisa " + (3 - attempts) + " attempts.");
                 } else {
                     errorLabel.setText("Kesempatan habis. Please wait 5 seconds.");
                 }
+            }
+        });
+
+        // Add event handlers for Enter key press
+        usernameTextField.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER) {
+                loginButton.fire();
+            }
+        });
+
+        passwordTextField.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER) {
+                loginButton.fire();
             }
         });
 
