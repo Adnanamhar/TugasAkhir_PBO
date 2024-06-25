@@ -26,6 +26,9 @@ import org.example.demo.DarkLightMode;
 import org.example.demo.Database.Book;
 import org.example.demo.Database.User;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 public class BorrowBook extends Application {
@@ -146,7 +149,12 @@ public class BorrowBook extends Application {
                             User.borrowBooks.get(indexBorrowBooks).add(book.getId_buku());
                         }
                         start(primaryStage);
-                        showPopupNotification(primaryStage, "Book borrowed successfully!");
+                        LocalDateTime now = LocalDateTime.now();
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                        String formattedDateTime = now.format(formatter);
+                        LocalDateTime returnDate = now.plus(7, ChronoUnit.DAYS);
+                        String formattedReturnDate = returnDate.format(formatter);
+                        showPopupNotification(primaryStage, "NIM: " + User.loginStudent + "\nBook borrowed successfully on: " + formattedDateTime + "\nBook Must Be Returned on: " + formattedReturnDate + "(7 Days");
                         return;
                     }
                 }
@@ -168,6 +176,7 @@ public class BorrowBook extends Application {
     }
 
     private void showPopupNotification(Stage ownerStage, String message) {
+
         Popup popup = new Popup();
         popup.setAutoHide(true);
 

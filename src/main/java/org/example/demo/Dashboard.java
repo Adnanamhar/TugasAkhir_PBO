@@ -1,5 +1,6 @@
 package org.example.demo;
 
+import javafx.animation.Animation;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -22,7 +23,7 @@ import javafx.geometry.Rectangle2D;
 import org.example.demo.Database.Book;
 import org.example.demo.Database.Student;
 import org.example.demo.Database.User;
-
+import org.example.demo.Time.CurrentDateTimeApp;  // Import kelas CurrentDateTimeApp
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +47,7 @@ public class Dashboard extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+
         if(!sudahTambah) {
             addTempStudent();
             addTempBooks();
@@ -79,7 +81,7 @@ public class Dashboard extends Application {
         logo.setFitWidth(50);
 
         // Application name
-        Label appName = new Label("LibraryApp");
+        Label appName = new Label("E-Library");
         appName.setFont(new Font("System Bold", 38));
 
         // Sign in button with popup
@@ -156,7 +158,7 @@ public class Dashboard extends Application {
         helpContent.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, new CornerRadii(5), Insets.EMPTY)));
         helpContent.setPadding(new Insets(10));
 
-        Label helpLabel = new Label("Help!\nadasjdljsalndsa cuiehiuahdsnakndksankddalskjksnaaknxlnxasknannxjkcaskjckjsac");
+        Label helpLabel = new Label("\nNo! Maybe Next Time Bro");
         helpContent.getChildren().add(helpLabel);
         helpPopup.getContent().add(helpContent);
 
@@ -181,8 +183,11 @@ public class Dashboard extends Application {
 
         root.getChildren().add(switchButton);
 
+        // Label for current date and time
+        Label dateTimeLabel = CurrentDateTimeApp.getCurrentDateTimeLabel();  // Dapatkan label dari CurrentDateTimeApp
+
         // Right side buttons
-        HBox rightButtons = new HBox(10, signInButton, languageButton, helpButton,switchButton);
+        HBox rightButtons = new HBox(10, signInButton, languageButton, helpButton, switchButton, dateTimeLabel);
         rightButtons.setPadding(new Insets(10));
         rightButtons.setAlignment(Pos.TOP_RIGHT);
         HBox.setHgrow(rightButtons, Priority.ALWAYS);
@@ -220,7 +225,7 @@ public class Dashboard extends Application {
         // Load books (example)
         List<Book> books = loadBooks();
         if (!books.isEmpty()) {
-            Book book = books.getFirst();
+            Book book = books.get(0);
             VBox bookBox = new VBox(5);
             bookBox.setAlignment(Pos.CENTER);
 
