@@ -9,12 +9,16 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.util.Duration;
 import org.example.demo.Admin.MenuAdmin;
-import org.example.demo.Database.Book;
-import org.example.demo.Database.Student;
-import org.example.demo.Database.User;
+
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 public class LoginAdmin extends Application {
+
+    private int attempts = 0; // Jumlah percobaan
+    private LocalDateTime lastAttemptTime; // Waktu terakhir kali percobaan
 
     @Override
     public void start(Stage primaryStage) {
@@ -68,19 +72,46 @@ public class LoginAdmin extends Application {
             errorLabel.setText("");
             String username = usernameTextField.getText();
             String password = passwordTextField.getText();
-            if(username.isEmpty()) {
+
+            if (username.isEmpty()) {
                 errorLabel.setText("Username empty");
                 return;
             }
-            if(password.isEmpty()) {
+            if (password.isEmpty()) {
                 errorLabel.setText("Password empty");
                 return;
             }
-            if(username.equals("adnan") && password.equals("admin")) {
+
+            // Check if waiting time is required due to multiple failed attempts
+            if (lastAttemptTime != null && attempts >= 3) {
+                LocalDateTime currentTime = LocalDateTime.now();
+                LocalDateTime unlockTime = lastAttemptTime.plusSeconds(5); // Menunggu 5 detik
+                if (currentTime.isBefore(unlockTime)) {
+                    // Menghitung sisa waktu untuk menunggu
+                    long secondsRemaining = ChronoUnit.SECONDS.between(currentTime, unlockTime);
+                    errorLabel.setText("Too many attempts. Please wait " + secondsRemaining + " seconds.");
+                    return;
+                } else {
+                    // Reset attempts dan lastAttemptTime karena waktu tunggu telah berakhir
+                    attempts = 0;
+                    lastAttemptTime = null;
+                }
+            }
+
+            // Validasi username dan password
+            if (username.equals("adnan") && password.equals("admin")) {
+                // Login berhasil
                 MenuAdmin menuAdmin = new MenuAdmin();
                 menuAdmin.start(primaryStage);
-            }else {
-                errorLabel.setText("Username or password incorrect.");
+            } else {
+                // Login gagal
+                attempts++;
+                lastAttemptTime = LocalDateTime.now();
+                if (attempts < 3) {
+                    errorLabel.setText("Username or password incorrect. Tersisa " + (3 - attempts));
+                } else {
+                    errorLabel.setText("Kesempatan habis. Please wait 5 seconds.");
+                }
             }
         });
 
@@ -103,9 +134,6 @@ public class LoginAdmin extends Application {
         primaryStage.setTitle("Login Form");
         primaryStage.setScene(scene);
         primaryStage.show();
-
-        // Apply theme
-        DarkLightMode.applyTheme(root);
     }
 
     public static void main(String[] args) {
