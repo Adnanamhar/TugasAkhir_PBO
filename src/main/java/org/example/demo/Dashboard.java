@@ -54,12 +54,12 @@ public class Dashboard extends Application {
         topSection.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
 
         // Logo
-        ImageView logo = new ImageView("file:src/main/java/org/example/demo/Image/github.png");
+        ImageView logo = new ImageView("file:src/main/java/org/example/demo/Image/logo.png");
         logo.setFitHeight(50);
         logo.setFitWidth(50);
 
         // Application name
-        Label appName = new Label("MyLibrary");
+        Label appName = new Label("LibraryApp");
         appName.setFont(new Font("System Bold", 38));
 
         // Sign in button with popup
