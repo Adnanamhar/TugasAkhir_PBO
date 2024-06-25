@@ -13,6 +13,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -32,6 +34,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 public class BorrowBook extends Application {
+
+    private boolean isBookIdSet = false;  // Flag to track if the Book ID has been set
 
     @Override
     public void start(Stage primaryStage) {
@@ -85,8 +89,8 @@ public class BorrowBook extends Application {
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         ObservableList<Book> bookData = FXCollections.observableArrayList();
-        for(Book book: User.books) {
-            if(book.getStock() > 0) {
+        for (Book book : User.books) {
+            if (book.getStock() > 0) {
                 bookData.add(book);
             }
         }
@@ -120,32 +124,32 @@ public class BorrowBook extends Application {
         okButton.setOnAction(actionEvent -> {
             errorLabel.setText("");
             String inputID = bookIdField.getText();
-            if(inputID.isEmpty()) {
+            if (inputID.isEmpty()) {
                 errorLabel.setText("ID empty");
                 showPopupNotification(primaryStage, "ID empty");
                 return;
             }
 
             boolean find = false;
-            for(Book book: User.books) {
-                if(book.getId_buku().equals(inputID)) {
+            for (Book book : User.books) {
+                if (book.getId_buku().equals(inputID)) {
                     find = true;
-                    if(book.getStock() > 0) {
-                        book.setStock(book.getStock()-1);
+                    if (book.getStock() > 0) {
+                        book.setStock(book.getStock() - 1);
                         int indexBorrowBooks = -1;
                         for (int i = 0; i < User.borrowBooks.size(); i++) {
-                            if(User.borrowBooks.get(i).get(0).equals(User.loginStudent)) {
+                            if (User.borrowBooks.get(i).get(0).equals(User.loginStudent)) {
                                 indexBorrowBooks = i;
                                 break;
                             }
                         }
                         book.setDuration(7);
-                        if(indexBorrowBooks < 0) {
+                        if (indexBorrowBooks < 0) {
                             ArrayList<String> temp = new ArrayList<>();
                             temp.add(User.loginStudent);
                             temp.add(book.getId_buku());
                             User.borrowBooks.add(temp);
-                        }else {
+                        } else {
                             User.borrowBooks.get(indexBorrowBooks).add(book.getId_buku());
                         }
                         start(primaryStage);
@@ -160,9 +164,25 @@ public class BorrowBook extends Application {
                 }
             }
 
-            if(!find) {
+            if (!find) {
                 errorLabel.setText("Book ID not found");
                 showPopupNotification(primaryStage, "Book ID not found");
+            }
+        });
+
+        // Menambahkan key listener ke root untuk menangani tombol Enter
+        root.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                if (!isBookIdSet) {
+                    Book selectedBook = tableView.getSelectionModel().getSelectedItem();
+                    if (selectedBook != null) {
+                        bookIdField.setText(selectedBook.getId_buku());
+                        isBookIdSet = true;  // Set flag to true after setting Book ID
+                    }
+                } else {
+                    okButton.fire();
+                    isBookIdSet = false;  // Reset flag after borrowing book
+                }
             }
         });
 
@@ -176,7 +196,6 @@ public class BorrowBook extends Application {
     }
 
     private void showPopupNotification(Stage ownerStage, String message) {
-
         Popup popup = new Popup();
         popup.setAutoHide(true);
 

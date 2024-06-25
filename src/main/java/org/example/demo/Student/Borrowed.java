@@ -13,6 +13,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -28,6 +30,9 @@ import org.example.demo.Database.User;
 
 public class Borrowed extends Application {
 
+    private boolean bookIdSelected = false; // Melacak apakah ID buku dipilih dari tabel
+    private String selectedBookId = null;  // Menyimpan ID buku yang dipilih
+
     @Override
     public void start(Stage primaryStage) {
         AnchorPane root = new AnchorPane();
@@ -38,7 +43,7 @@ public class Borrowed extends Application {
         titleLabel.setLayoutY(16.0);
         titleLabel.setFont(new Font("System Bold", 36.0));
 
-        Button backButton = new Button("Back");
+        Button backButton = new Button("Kembali");
         backButton.setLayoutX(14.0);
         backButton.setLayoutY(446.0);
         backButton.setPrefSize(119.0, 40.0);
@@ -60,19 +65,19 @@ public class Borrowed extends Application {
         TableView<Book> tableView = new TableView<>();
         tableView.setPrefSize(639.0, 329.0);
 
-        TableColumn<Book, String> column1 = new TableColumn<>("ID Book");
+        TableColumn<Book, String> column1 = new TableColumn<>("ID Buku");
         column1.setPrefWidth(140);
         column1.setCellValueFactory(new PropertyValueFactory<>("id_buku"));
-        TableColumn<Book, String> column2 = new TableColumn<>("Title");
+        TableColumn<Book, String> column2 = new TableColumn<>("Judul");
         column2.setPrefWidth(80);
         column2.setCellValueFactory(new PropertyValueFactory<>("title"));
-        TableColumn<Book, String> column3 = new TableColumn<>("Author");
+        TableColumn<Book, String> column3 = new TableColumn<>("Penulis");
         column3.setPrefWidth(80);
         column3.setCellValueFactory(new PropertyValueFactory<>("author"));
-        TableColumn<Book, String> column4 = new TableColumn<>("Category");
+        TableColumn<Book, String> column4 = new TableColumn<>("Kategori");
         column4.setPrefWidth(80);
         column4.setCellValueFactory(new PropertyValueFactory<>("category"));
-        TableColumn<Book, String> column5 = new TableColumn<>("Duration");
+        TableColumn<Book, String> column5 = new TableColumn<>("Durasi");
         column5.setPrefWidth(80);
         column5.setCellValueFactory(new PropertyValueFactory<>("duration"));
 
@@ -81,10 +86,10 @@ public class Borrowed extends Application {
 
         ObservableList<Book> bookData = FXCollections.observableArrayList();
         for (int i = 0; i < User.borrowBooks.size(); i++) {
-            if(User.borrowBooks.get(i).get(0).equals(User.loginStudent)) {
+            if (User.borrowBooks.get(i).get(0).equals(User.loginStudent)) {
                 for (int j = 1; j < User.borrowBooks.get(i).size(); j++) {
                     for (int k = 0; k < User.books.size(); k++) {
-                        if(User.borrowBooks.get(i).get(j).equals(User.books.get(k).getId_buku())) {
+                        if (User.borrowBooks.get(i).get(j).equals(User.books.get(k).getId_buku())) {
                             bookData.add(User.books.get(k));
                         }
                     }
@@ -95,7 +100,7 @@ public class Borrowed extends Application {
 
         scrollPane.setContent(tableView);
 
-        Label bookIdLabel = new Label("Book ID:");
+        Label bookIdLabel = new Label("ID Buku:");
         bookIdLabel.setLayoutX(319.0);
         bookIdLabel.setLayoutY(43.0);
         bookIdLabel.setFont(new Font(18.0));
@@ -118,27 +123,49 @@ public class Borrowed extends Application {
 
         root.getChildren().addAll(titleLabel, backButton, scrollPane, bookIdLabel, bookIdField, okButton, errorLabel);
 
+        // Menangani pemilihan baris tabel
+        tableView.setOnMouseClicked(event -> {
+            Book selectedBook = tableView.getSelectionModel().getSelectedItem();
+            if (selectedBook != null) {
+                selectedBookId = selectedBook.getId_buku();
+                bookIdSelected = true;
+            }
+        });
+
+        // Menangani kejadian tombol Enter
+        root.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                if (bookIdSelected && !bookIdField.isFocused()) {
+                    bookIdField.setText(selectedBookId);
+                    bookIdField.requestFocus();
+                    bookIdSelected = false;
+                } else if (bookIdField.isFocused()) {
+                    okButton.fire();
+                }
+            }
+        });
+
         okButton.setOnAction(actionEvent -> {
             errorLabel.setText("");
             String inputID = bookIdField.getText();
-            if(inputID.isEmpty()) {
-                errorLabel.setText("ID empty");
-                showPopupNotification(primaryStage, "ID empty");
+            if (inputID.isEmpty()) {
+                errorLabel.setText("ID kosong");
+                showPopupNotification(primaryStage, "ID kosong");
                 return;
             }
 
             boolean find = false;
-            for(int i = 0; i < User.borrowBooks.size(); i++) {
-                if(User.borrowBooks.get(i).get(0).equals(User.loginStudent)) {
+            for (int i = 0; i < User.borrowBooks.size(); i++) {
+                if (User.borrowBooks.get(i).get(0).equals(User.loginStudent)) {
                     for (int j = 1; j < User.borrowBooks.get(i).size(); j++) {
-                        if(User.borrowBooks.get(i).get(j).equals(inputID)) {
+                        if (User.borrowBooks.get(i).get(j).equals(inputID)) {
                             find = true;
                             User.borrowBooks.get(i).remove(j);
                             for (int k = 0; k < User.books.size(); k++) {
-                                if(User.books.get(k).getId_buku().equals(inputID)) {
+                                if (User.books.get(k).getId_buku().equals(inputID)) {
                                     User.books.get(k).setStock(User.books.get(k).getStock() + 1);
                                     start(primaryStage);
-                                    showPopupNotification(primaryStage, "Book returned successfully!");
+                                    showPopupNotification(primaryStage, "Buku berhasil dikembalikan!");
                                     return;
                                 }
                             }
@@ -147,18 +174,18 @@ public class Borrowed extends Application {
                     }
                 }
             }
-            if(!find) {
-                errorLabel.setText("Book ID not found");
-                showPopupNotification(primaryStage, "Book ID not found");
+            if (!find) {
+                errorLabel.setText("ID Buku tidak ditemukan");
+                showPopupNotification(primaryStage, "ID Buku tidak ditemukan");
             }
         });
 
         Scene scene = new Scene(root);
-        primaryStage.setTitle("Return Book");
+        primaryStage.setTitle("Pengembalian Buku");
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        // Apply theme
+        // Terapkan tema
         DarkLightMode.applyTheme(root);
     }
 
@@ -176,13 +203,13 @@ public class Borrowed extends Application {
 
         popup.getContent().add(popupContent);
 
-        // Calculate position to show popup at the bottom center of the screen
+        // Hitung posisi untuk menampilkan popup di bagian bawah tengah layar
         double xPos = ownerStage.getX() + (ownerStage.getWidth() / 2) - (popupContent.getWidth() / 2);
         double yPos = ownerStage.getY() + ownerStage.getHeight() - popupContent.getHeight() - 10;
 
         popup.show(ownerStage, xPos, yPos);
 
-        // Hide popup after 3 seconds
+        // Sembunyikan popup setelah 3 detik
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> popup.hide()));
         timeline.setCycleCount(1);
         timeline.play();
