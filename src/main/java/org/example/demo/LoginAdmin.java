@@ -1,6 +1,7 @@
 package org.example.demo;
 
 import javafx.application.Application;
+import javafx.scene.control.PasswordField;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -56,7 +57,7 @@ public class LoginAdmin extends Application {
         usernameTextField.setLayoutY(154);
         usernameTextField.setPrefSize(381, 40);
 
-        TextField passwordTextField = new TextField();
+        PasswordField passwordTextField = new PasswordField();
         passwordTextField.setLayoutX(163);
         passwordTextField.setLayoutY(245);
         passwordTextField.setPrefSize(381, 40);

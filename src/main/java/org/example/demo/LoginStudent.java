@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
@@ -51,7 +52,7 @@ public class LoginStudent extends Application {
         nimTextField.setLayoutY(154);
         nimTextField.setPrefSize(381, 40);
 
-        TextField passwordTextField = new TextField();
+        PasswordField passwordTextField = new PasswordField();
         passwordTextField.setLayoutX(163);
         passwordTextField.setLayoutY(245);
         passwordTextField.setPrefSize(381, 40);

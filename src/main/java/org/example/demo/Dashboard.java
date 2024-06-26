@@ -1,6 +1,7 @@
 package org.example.demo;
 
 import javafx.animation.Animation;
+import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -20,6 +21,7 @@ import javafx.stage.Stage;
 import javafx.stage.Screen;
 import javafx.geometry.Rectangle2D;
 
+import javafx.util.Duration;
 import org.example.demo.Database.Book;
 import org.example.demo.Database.Student;
 import org.example.demo.Database.User;
@@ -31,6 +33,10 @@ import java.util.List;
 public class Dashboard extends Application {
 
     public static boolean sudahTambah = false;
+
+
+
+    private boolean isDarkMode = false;
 
     public void addTempStudent(){
         User.students.add(new Student("adnan", "202310370311001",  "Teknik", "Informatika"));
@@ -170,20 +176,22 @@ public class Dashboard extends Application {
             helpPopup.hide();
         });
 
+
         // Button to switch themes
-        Button switchButton = new Button("Switch Mode");
-        switchButton.getStyleClass().add("button");
-        VBox switchContent = new VBox(10);
-        switchContent.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, new CornerRadii(5), Insets.EMPTY)));
-        switchContent.setPadding(new Insets(10));
+        CircleButton switchButton = new CircleButton();
         switchButton.setOnAction(event -> {
             DarkLightMode.toggleTheme();
             DarkLightMode.applyTheme(root);
+            isDarkMode = !isDarkMode;
+            if (isDarkMode) {
+                animateTransition(root, Color.WHITE, Color.BLACK, appName, switchButton, "file:src/main/java/org/example/demo/Image/moon.png");
+            } else {
+                animateTransition(root, Color.BLACK, Color.WHITE, appName, switchButton, "file:src/main/java/org/example/demo/Image/sun.png");
+            }
         });
+        switchButton.setImage("file:src/main/java/org/example/demo/Image/sun.png");
 
         root.getChildren().add(switchButton);
-        // DarkLight Mode (if needed)
-        DarkLightMode.applyTheme(root);
 
         // Label for current date and time
         Label dateTimeLabel = CurrentDateTimeApp.getCurrentDateTimeLabel();  // Dapatkan label dari CurrentDateTimeApp
@@ -272,7 +280,7 @@ public class Dashboard extends Application {
 
         List<Circle> navCircles = new ArrayList<>();
         for (int i = 0; i < backgroundImages.size(); i++) {
-            Circle circle = new Circle(10, i == 0 ? Paint.valueOf("black") : Paint.valueOf("white"));
+            Circle circle = new Circle(10, i == 0 ? Paint.valueOf("grey") : Paint.valueOf("white"));
             final int index = i;
             circle.setOnMouseClicked((MouseEvent e) -> {
                 // Ubah background image
@@ -310,6 +318,9 @@ public class Dashboard extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
+        // DarkLight Mode (if needed)
+        DarkLightMode.applyTheme(root);
+
         // Make the layout responsive
         scene.widthProperty().addListener((obs, oldVal, newVal) -> {
             double width = newVal.doubleValue();
@@ -334,7 +345,41 @@ public class Dashboard extends Application {
         return books;
     }
 
+    private void animateTransition(BorderPane root, Color fromColor, Color toColor, Label appName, CircleButton switchButton, String iconPath) {
+        FadeTransition fadeTransition = new FadeTransition(Duration.millis(300), root);
+        fadeTransition.setFromValue(1.0);
+        fadeTransition.setToValue(0.0);
+        fadeTransition.setOnFinished(event -> {
+            root.setBackground(new Background(new BackgroundFill(toColor, CornerRadii.EMPTY, Insets.EMPTY)));
+            appName.setTextFill(fromColor);
+            switchButton.setImage(iconPath);  // Change the icon of the button
+            FadeTransition fadeInTransition = new FadeTransition(Duration.millis(300), root);
+            fadeInTransition.setFromValue(0.0);
+            fadeInTransition.setToValue(1.0);
+            fadeInTransition.play();
+        });
+        fadeTransition.play();
+    }
+
     public static void main(String[] args) {
         launch(args);
+    }
+
+    class CircleButton extends Button {
+        private ImageView imageView;
+
+        public CircleButton() {
+            setPrefSize(25, 25);
+            setStyle("-fx-background-radius: 50%; -fx-background-color: transparent;");
+            imageView = new ImageView();
+            imageView.setFitWidth(20);
+            imageView.setFitHeight(20);
+            setGraphic(imageView);
+        }
+
+        public void setImage(String imagePath) {
+            Image image = new Image(imagePath);
+            imageView.setImage(image);
+        }
     }
 }
