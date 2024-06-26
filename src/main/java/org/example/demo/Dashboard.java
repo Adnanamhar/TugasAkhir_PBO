@@ -1,6 +1,5 @@
 package org.example.demo;
 
-import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -61,7 +60,7 @@ public class Dashboard extends Application {
         }
         BorderPane root = new BorderPane();
 
-        Image backgroundImage = new Image("file:src/main/java/org/example/demo/Image/bg1.png");
+        Image backgroundImage = new Image("file:src/main/java/org/example/demo/Image/bg1white.gif");
         ImageView backgroundView = new ImageView(backgroundImage);
         backgroundView.setPreserveRatio(false); // Tidak mempertahankan rasio aspek
 
@@ -78,8 +77,10 @@ public class Dashboard extends Application {
         // Top section
         HBox topSection = new HBox();
         topSection.setPadding(new Insets(10));
-        topSection.setSpacing(20);
-        topSection.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
+        topSection.setSpacing(25);
+
+        topSection.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+
 
         // Logo
         ImageView logo = new ImageView("file:src/main/java/org/example/demo/Image/logo.png");
@@ -164,7 +165,7 @@ public class Dashboard extends Application {
         helpContent.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, new CornerRadii(5), Insets.EMPTY)));
         helpContent.setPadding(new Insets(10));
 
-        Label helpLabel = new Label("\nNo! Maybe Next Time Bro");
+        Label helpLabel = new Label("\n No! \n Maybe Next Time Bro");
         helpContent.getChildren().add(helpLabel);
         helpPopup.getContent().add(helpContent);
 
@@ -183,15 +184,24 @@ public class Dashboard extends Application {
             DarkLightMode.toggleTheme();
             DarkLightMode.applyTheme(root);
             isDarkMode = !isDarkMode;
+            topSection.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+            logo.setImage(new Image("file:src/main/java/org/example/demo/Image/logo_dark.png"));
             if (isDarkMode) {
                 animateTransition(root, Color.WHITE, Color.BLACK, appName, switchButton, "file:src/main/java/org/example/demo/Image/moon.png");
+
             } else {
                 animateTransition(root, Color.BLACK, Color.WHITE, appName, switchButton, "file:src/main/java/org/example/demo/Image/sun.png");
+                topSection.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+                logo.setImage(new Image("file:src/main/java/org/example/demo/Image/logo.png"));
+
             }
         });
         switchButton.setImage("file:src/main/java/org/example/demo/Image/sun.png");
 
         root.getChildren().add(switchButton);
+
+        // DarkLight Mode
+        DarkLightMode.applyTheme(root);
 
         // Label for current date and time
         Label dateTimeLabel = CurrentDateTimeApp.getCurrentDateTimeLabel();  // Dapatkan label dari CurrentDateTimeApp
@@ -239,7 +249,7 @@ public class Dashboard extends Application {
             VBox bookBox = new VBox(5);
             bookBox.setAlignment(Pos.CENTER);
 
-            bookCover = new ImageView("file:src/main/java/org/example/demo/Image/buku1.png");
+            bookCover = new ImageView("file:src/main/java/org/example/demo/Image/buku2.png");
             bookCover.setFitHeight(200);
             bookCover.setFitWidth(150);
 
@@ -254,23 +264,20 @@ public class Dashboard extends Application {
                 bookCover.setFitWidth(150);
             });
 
-            Label bookTitle = new Label(book.getTitle());
-            bookTitle.setFont(new Font(18));
-            bookTitle.setWrapText(true);
 
-            bookBox.getChildren().addAll(bookCover, bookTitle);
+            bookBox.getChildren().addAll(bookCover);
             bookDisplay.getChildren().add(bookBox);
         }
 
         // Background images dan book covers
         List<String> backgroundImages = List.of(
-                "file:src/main/java/org/example/demo/Image/bg1.png",
-                "file:src/main/java/org/example/demo/Image/bg2.png"
+                "file:src/main/java/org/example/demo/Image/bg1white.gif",
+                "file:src/main/java/org/example/demo/Image/bg1.png"
         );
 
         List<String> bookCovers = List.of(
-                "file:src/main/java/org/example/demo/Image/buku1.png",
-                "file:src/main/java/org/example/demo/Image/buku2.png"
+                "file:src/main/java/org/example/demo/Image/buku2.png",
+                "file:src/main/java/org/example/demo/Image/buku1.png"
         );
 
         // Circle navigation control
@@ -280,7 +287,7 @@ public class Dashboard extends Application {
 
         List<Circle> navCircles = new ArrayList<>();
         for (int i = 0; i < backgroundImages.size(); i++) {
-            Circle circle = new Circle(10, i == 0 ? Paint.valueOf("grey") : Paint.valueOf("white"));
+            Circle circle = new Circle(10, i == 0 ? Paint.valueOf("white") : Paint.valueOf("grey"));
             final int index = i;
             circle.setOnMouseClicked((MouseEvent e) -> {
                 // Ubah background image
@@ -291,9 +298,9 @@ public class Dashboard extends Application {
 
                 // Perbarui warna circle
                 for (Circle c : navCircles) {
-                    c.setFill(Paint.valueOf("white"));
+                    c.setFill(Paint.valueOf("grey"));
                 }
-                circle.setFill(Paint.valueOf("grey"));
+                circle.setFill(Paint.valueOf("white"));
             });
             navCircles.add(circle);
             navigationControl.getChildren().add(circle);
@@ -317,9 +324,6 @@ public class Dashboard extends Application {
         primaryStage.setTitle("Perpustakaanku");
         primaryStage.setScene(scene);
         primaryStage.show();
-
-        // DarkLight Mode (if needed)
-        DarkLightMode.applyTheme(root);
 
         // Make the layout responsive
         scene.widthProperty().addListener((obs, oldVal, newVal) -> {
