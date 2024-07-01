@@ -19,12 +19,11 @@ import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.stage.Screen;
 import javafx.geometry.Rectangle2D;
-
 import javafx.util.Duration;
 import org.example.demo.Database.Book;
 import org.example.demo.Database.Student;
 import org.example.demo.Database.User;
-import org.example.demo.Time.CurrentDateTimeApp;  // Import kelas CurrentDateTimeApp
+import org.example.demo.Time.CurrentDateTimeApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,40 +32,60 @@ public class Dashboard extends Application {
 
     public static boolean sudahTambah = false;
 
-
-
     private boolean isDarkMode = false;
+    private int currentIndex = 0;
+    private int currentIndexs = 0;
+    private ImageView bookCover;
 
-    public void addTempStudent(){
-        User.students.add(new Student("adnan", "202310370311001",  "Teknik", "Informatika"));
+    private final String[] backgrounds = {
+            "file:src/main/java/org/example/demo/Image/bg1white.gif",
+            "file:src/main/java/org/example/demo/Image/bg2white.png"
+    };
+
+    private final String[] bookCovers = {
+            "file:src/main/java/org/example/demo/Image/buku2.png",
+            "file:src/main/java/org/example/demo/Image/buku1.png"
+    };
+
+    // Daftar background untuk mode terang dan mode gelap
+    private List<String> lightModeBackgrounds = List.of(
+            "file:src/main/java/org/example/demo/Image/bg1white.gif",
+            "file:src/main/java/org/example/demo/Image/bg2white.png"
+    );
+
+    private List<String> darkModeBackgrounds = List.of(
+            "file:src/main/java/org/example/demo/Image/bg2black.png",
+            "file:src/main/java/org/example/demo/Image/bg1black.gif"
+    );
+
+
+    public void addTempStudent() {
+        User.students.add(new Student("adnan", "202310370311001", "Teknik", "Informatika"));
         User.students.add(new Student("fahmi", "202310370311041", "FK", "Kedokteran"));
     }
 
     public void addTempBooks() {
         User.books.add(new Book("388c-e681-9152", "title", "author", "History", 4));
-        User.books.add(new Book("ed90-be30-5cdb", "title", "author", "Story",0));
+        User.books.add(new Book("ed90-be30-5cdb", "title", "author", "Story", 0));
         User.books.add(new Book("d95e-0c4a-9523", "title", "author", "Text", 1));
     }
-
-    private ImageView bookCover; // Definisikan di tingkat kelas
 
     @Override
     public void start(Stage primaryStage) {
 
-        if(!sudahTambah) {
+        if (!sudahTambah) {
             addTempStudent();
             addTempBooks();
             sudahTambah = true;
         }
+
         BorderPane root = new BorderPane();
 
-        Image backgroundImage = new Image("file:src/main/java/org/example/demo/Image/bg1white.gif");
-        ImageView backgroundView = new ImageView(backgroundImage);
-        backgroundView.setPreserveRatio(false); // Tidak mempertahankan rasio aspek
+        ImageView backgroundView = new ImageView(new Image(backgrounds[currentIndex]));
+        backgroundView.setPreserveRatio(false);
 
         root.getChildren().add(backgroundView);
 
-        // Listener untuk menyesuaikan ukuran background ketika ukuran scene berubah
         root.widthProperty().addListener((obs, oldVal, newVal) -> {
             backgroundView.setFitWidth(newVal.doubleValue());
         });
@@ -78,9 +97,7 @@ public class Dashboard extends Application {
         HBox topSection = new HBox();
         topSection.setPadding(new Insets(10));
         topSection.setSpacing(25);
-
         topSection.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-
 
         // Logo
         ImageView logo = new ImageView("file:src/main/java/org/example/demo/Image/logo.png");
@@ -96,37 +113,9 @@ public class Dashboard extends Application {
         signInButton.setFont(new Font(14));
         signInButton.setBackground(Background.EMPTY);
 
-        // Create popup for Sign In
-        Popup signInPopup = new Popup();
-        VBox popupContent = new VBox(10);
-        popupContent.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, new CornerRadii(5), Insets.EMPTY)));
-        popupContent.setPadding(new Insets(10));
-
-        Button studentSignInButton = new Button("Sign In to Student");
-        studentSignInButton.setPrefWidth(150);
-        studentSignInButton.setOnAction(e -> {
-            LoginStudent loginStudent = new LoginStudent();
-            loginStudent.start(new Stage());
-            signInPopup.hide();
-        });
-
-        Button adminSignInButton = new Button("Sign In to Admin");
-        adminSignInButton.setPrefWidth(150);
-        adminSignInButton.setOnAction(e -> {
-            LoginAdmin loginAdmin = new LoginAdmin();
-            loginAdmin.start(new Stage());
-            signInPopup.hide();
-        });
-
-        popupContent.getChildren().addAll(studentSignInButton, adminSignInButton);
-        signInPopup.getContent().add(popupContent);
-
+        Popup signInPopup = createPopup(new Button[]{new Button("Sign In to Student"), new Button("Sign In to Admin")}, primaryStage, signInButton);
         signInButton.setOnMouseEntered(e -> {
             signInPopup.show(primaryStage, signInButton.localToScreen(signInButton.getBoundsInLocal()).getMinX(), signInButton.localToScreen(signInButton.getBoundsInLocal()).getMaxY());
-        });
-
-        popupContent.setOnMouseExited(e -> {
-            signInPopup.hide();
         });
 
         // Language button with popup
@@ -134,25 +123,9 @@ public class Dashboard extends Application {
         languageButton.setFont(new Font(14));
         languageButton.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
 
-        Popup languagePopup = new Popup();
-        VBox languageContent = new VBox(10);
-        languageContent.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, new CornerRadii(5), Insets.EMPTY)));
-        languageContent.setPadding(new Insets(10));
-
-        Button englishButton = new Button("Indonesia");
-        englishButton.setPrefWidth(100);
-        Button arabicButton = new Button("Arabic");
-        arabicButton.setPrefWidth(100);
-
-        languageContent.getChildren().addAll(englishButton, arabicButton);
-        languagePopup.getContent().add(languageContent);
-
+        Popup languagePopup = createPopup(new Button[]{new Button("Indonesia"), new Button("Arabic")}, primaryStage, languageButton);
         languageButton.setOnMouseEntered(e -> {
             languagePopup.show(primaryStage, languageButton.localToScreen(languageButton.getBoundsInLocal()).getMinX(), languageButton.localToScreen(languageButton.getBoundsInLocal()).getMaxY());
-        });
-
-        languageContent.setOnMouseExited(e -> {
-            languagePopup.hide();
         });
 
         // Help button with popup
@@ -160,23 +133,10 @@ public class Dashboard extends Application {
         helpButton.setFont(new Font(14));
         helpButton.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
 
-        Popup helpPopup = new Popup();
-        VBox helpContent = new VBox(10);
-        helpContent.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, new CornerRadii(5), Insets.EMPTY)));
-        helpContent.setPadding(new Insets(10));
-
-        Label helpLabel = new Label("\n No! \n Maybe Next Time Bro");
-        helpContent.getChildren().add(helpLabel);
-        helpPopup.getContent().add(helpContent);
-
+        Popup helpPopup = createPopup(new Label[]{new Label(" No! \n Maybe Next Time Bro")}, primaryStage, helpButton);
         helpButton.setOnMouseEntered(e -> {
             helpPopup.show(primaryStage, helpButton.localToScreen(helpButton.getBoundsInLocal()).getMinX(), helpButton.localToScreen(helpButton.getBoundsInLocal()).getMaxY());
         });
-
-        helpContent.setOnMouseExited(e -> {
-            helpPopup.hide();
-        });
-
 
         // Button to switch themes
         CircleButton switchButton = new CircleButton();
@@ -185,15 +145,18 @@ public class Dashboard extends Application {
             DarkLightMode.applyTheme(root);
             isDarkMode = !isDarkMode;
             topSection.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
-            logo.setImage(new Image("file:src/main/java/org/example/demo/Image/logo_dark.png"));
+            logo.setImage(new Image("file:src/main/java/org/example/demo/Image/logo" + (isDarkMode ? "_dark" : "") + ".png"));
+            animateTransition(root, isDarkMode ? Color.WHITE : Color.BLACK, isDarkMode ? Color.BLACK : Color.WHITE, appName, switchButton, "file:src/main/java/org/example/demo/Image/" + (isDarkMode ? "moon" : "sun") + ".png");
+
             if (isDarkMode) {
                 animateTransition(root, Color.WHITE, Color.BLACK, appName, switchButton, "file:src/main/java/org/example/demo/Image/moon.png");
+                changeBackgroundForDarkMode(true, backgroundView); // Panggil fungsi untuk mengubah background saat mode gelap
 
             } else {
                 animateTransition(root, Color.BLACK, Color.WHITE, appName, switchButton, "file:src/main/java/org/example/demo/Image/sun.png");
                 topSection.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
                 logo.setImage(new Image("file:src/main/java/org/example/demo/Image/logo.png"));
-
+                changeBackgroundForDarkMode(false, backgroundView); // Panggil fungsi untuk mengubah background saat mode terang
             }
         });
         switchButton.setImage("file:src/main/java/org/example/demo/Image/sun.png");
@@ -204,7 +167,7 @@ public class Dashboard extends Application {
         DarkLightMode.applyTheme(root);
 
         // Label for current date and time
-        Label dateTimeLabel = CurrentDateTimeApp.getCurrentDateTimeLabel();  // Dapatkan label dari CurrentDateTimeApp
+        Label dateTimeLabel = CurrentDateTimeApp.getCurrentDateTimeLabel();
 
         // Right side buttons
         HBox rightButtons = new HBox(10, signInButton, languageButton, helpButton, switchButton, dateTimeLabel);
@@ -212,7 +175,6 @@ public class Dashboard extends Application {
         rightButtons.setAlignment(Pos.TOP_RIGHT);
         HBox.setHgrow(rightButtons, Priority.ALWAYS);
 
-        // Adding elements to the top section
         topSection.getChildren().addAll(logo, appName, rightButtons);
 
         // Center section
@@ -221,7 +183,7 @@ public class Dashboard extends Application {
 
         // Slogan section
         VBox sloganSection = new VBox(20);
-        sloganSection.setPadding(new Insets(50));
+        sloganSection.setPadding(new Insets(30));
         sloganSection.setAlignment(Pos.CENTER);
 
         Label sloganLabel = new Label("Welcome to MyLibrary!");
@@ -249,62 +211,44 @@ public class Dashboard extends Application {
             VBox bookBox = new VBox(5);
             bookBox.setAlignment(Pos.CENTER);
 
-            bookCover = new ImageView("file:src/main/java/org/example/demo/Image/buku2.png");
-            bookCover.setFitHeight(200);
-            bookCover.setFitWidth(150);
+            bookCover = new ImageView(new Image(bookCovers[currentIndex]));
+            bookCover.setFitHeight(220);
+            bookCover.setFitWidth(170);
 
-            // Effect when mouse entered
             bookCover.setOnMouseEntered(e -> {
-                bookCover.setFitHeight(220);
-                bookCover.setFitWidth(170);
+                bookCover.setFitHeight(240);
+                bookCover.setFitWidth(190);
             });
 
             bookCover.setOnMouseExited(e -> {
-                bookCover.setFitHeight(200);
-                bookCover.setFitWidth(150);
+                bookCover.setFitHeight(220);
+                bookCover.setFitWidth(170);
             });
-
 
             bookBox.getChildren().addAll(bookCover);
             bookDisplay.getChildren().add(bookBox);
         }
 
-        // Background images dan book covers
-        List<String> backgroundImages = List.of(
-                "file:src/main/java/org/example/demo/Image/bg1white.gif",
-                "file:src/main/java/org/example/demo/Image/bg1.png"
-        );
+        // Deklarasi tombol navigasi kiri dan kanan
+        HBox navigationButtons = new HBox(-10);
+        navigationButtons.setAlignment(Pos.CENTER);
+        navigationButtons.setPadding(new Insets(10));
 
-        List<String> bookCovers = List.of(
-                "file:src/main/java/org/example/demo/Image/buku2.png",
-                "file:src/main/java/org/example/demo/Image/buku1.png"
-        );
+        CircleButton leftButton = new CircleButton();
+        leftButton.setImage("file:src/main/java/org/example/demo/Image/arrowback.png");
+        leftButton.setOnAction(e -> changeBackground(-1, backgroundView));
 
-        // Circle navigation control
-        HBox navigationControl = new HBox(10);
+        CircleButton rightButton = new CircleButton();
+        rightButton.setImage("file:src/main/java/org/example/demo/Image/arrownext.png");
+        rightButton.setOnAction(e -> changeBackground(1, backgroundView));
+
+        navigationButtons.getChildren().addAll(leftButton, rightButton);
+        bookDisplay.getChildren().add(navigationButtons);
+
+        // Navigation control
+        HBox navigationControl = new HBox(-10, leftButton, rightButton);
         navigationControl.setAlignment(Pos.CENTER);
-        navigationControl.setPadding(new Insets(10));
-
-        List<Circle> navCircles = new ArrayList<>();
-        for (int i = 0; i < backgroundImages.size(); i++) {
-            Circle circle = new Circle(10, i == 0 ? Paint.valueOf("white") : Paint.valueOf("grey"));
-            final int index = i;
-            circle.setOnMouseClicked((MouseEvent e) -> {
-                // Ubah background image
-                backgroundView.setImage(new Image(backgroundImages.get(index)));
-
-                // Ubah book cover image
-                bookCover.setImage(new Image(bookCovers.get(index)));
-
-                // Perbarui warna circle
-                for (Circle c : navCircles) {
-                    c.setFill(Paint.valueOf("grey"));
-                }
-                circle.setFill(Paint.valueOf("white"));
-            });
-            navCircles.add(circle);
-            navigationControl.getChildren().add(circle);
-        }
+        navigationControl.setPadding(new Insets(-20));
 
         bookDisplay.getChildren().add(navigationControl);
 
@@ -328,7 +272,7 @@ public class Dashboard extends Application {
         // Make the layout responsive
         scene.widthProperty().addListener((obs, oldVal, newVal) -> {
             double width = newVal.doubleValue();
-            if (width < 600) {
+            if (width > 600) {
                 topSection.setSpacing(10);
                 centerSection.setSpacing(10);
                 sloganSection.setPadding(new Insets(10));
@@ -349,6 +293,21 @@ public class Dashboard extends Application {
         return books;
     }
 
+    // Metode untuk mengubah latar belakang dan sampul buku
+    private void changeBackground(int direction, ImageView backgroundView) {
+        currentIndex = (currentIndex + direction + backgrounds.length) % backgrounds.length;
+        backgroundView.setImage(new Image(backgrounds[currentIndex]));
+        bookCover.setImage(new Image(bookCovers[currentIndex]));
+    }
+
+    private void changeBackgroundForDarkMode(boolean isDarkMode, ImageView backgroundView) {
+        List<String> currentBackgrounds = isDarkMode ? darkModeBackgrounds : lightModeBackgrounds;
+        currentIndexs = (currentIndexs + 1) % currentBackgrounds.size();
+        backgroundView.setImage(new Image(currentBackgrounds.get(currentIndexs)));
+        bookCover.setImage(new Image(bookCovers[currentIndexs]));
+    }
+
+
     private void animateTransition(BorderPane root, Color fromColor, Color toColor, Label appName, CircleButton switchButton, String iconPath) {
         FadeTransition fadeTransition = new FadeTransition(Duration.millis(300), root);
         fadeTransition.setFromValue(1.0);
@@ -356,13 +315,48 @@ public class Dashboard extends Application {
         fadeTransition.setOnFinished(event -> {
             root.setBackground(new Background(new BackgroundFill(toColor, CornerRadii.EMPTY, Insets.EMPTY)));
             appName.setTextFill(fromColor);
-            switchButton.setImage(iconPath);  // Change the icon of the button
+            switchButton.setImage(iconPath);
             FadeTransition fadeInTransition = new FadeTransition(Duration.millis(300), root);
             fadeInTransition.setFromValue(0.0);
             fadeInTransition.setToValue(1.0);
             fadeInTransition.play();
         });
         fadeTransition.play();
+    }
+
+    private Popup createPopup(Object[] contents, Stage primaryStage, Button triggerButton) {
+        Popup popup = new Popup();
+        VBox popupContent = new VBox(10);
+        popupContent.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, new CornerRadii(5), Insets.EMPTY)));
+        popupContent.setPadding(new Insets(10));
+
+        for (Object content : contents) {
+            if (content instanceof Button) {
+                Button button = (Button) content;
+                button.setPrefWidth(150);
+                button.setOnAction(e -> {
+                    if (button.getText().contains("Student")) {
+                        LoginStudent loginStudent = new LoginStudent();
+                        loginStudent.start(new Stage());
+                    } else if (button.getText().contains("Admin")) {
+                        LoginAdmin loginAdmin = new LoginAdmin();
+                        loginAdmin.start(new Stage());
+                    }
+                    popup.hide();
+                });
+                popupContent.getChildren().add(button);
+            } else if (content instanceof Label) {
+                popupContent.getChildren().add((Label) content);
+            }
+        }
+
+        popup.getContent().add(popupContent);
+
+        popupContent.setOnMouseExited(e -> {
+            popup.hide();
+        });
+
+        return popup;
     }
 
     public static void main(String[] args) {
@@ -373,17 +367,20 @@ public class Dashboard extends Application {
         private ImageView imageView;
 
         public CircleButton() {
-            setPrefSize(25, 25);
-            setStyle("-fx-background-radius: 50%; -fx-background-color: transparent;");
             imageView = new ImageView();
-            imageView.setFitWidth(20);
-            imageView.setFitHeight(20);
             setGraphic(imageView);
+            setBackground(Background.EMPTY); // Menghilangkan latar belakang
+            setBorder(Border.EMPTY); // Menghilangkan batas
+            setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
+            setMinSize(40, 40);
+            setMaxSize(40, 40);
         }
 
         public void setImage(String imagePath) {
             Image image = new Image(imagePath);
             imageView.setImage(image);
+            imageView.setFitWidth(40);
+            imageView.setFitHeight(40);
         }
     }
 }

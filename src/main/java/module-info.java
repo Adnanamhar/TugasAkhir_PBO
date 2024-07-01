@@ -1,6 +1,7 @@
 module org.example.demo {
     requires javafx.controls;
     requires javafx.fxml;
+    requires java.mail;
 
 
     opens org.example.demo to javafx.fxml;
