@@ -27,7 +27,10 @@ import javafx.animation.Timeline;
 import org.example.demo.DarkLightMode;
 import org.example.demo.Database.Book;
 import org.example.demo.Database.User;
+import org.example.demo.LoginStudent;
+import org.example.demo.SendEmail;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -35,6 +38,8 @@ import java.util.ArrayList;
 
 public class BorrowBook extends Application {
 
+    public static final String Email1 = "adnanamhar123@gmail.com";
+    public static final String Email2 = "fahmimajid01@gmail.com";
     private boolean isBookIdSet = false;  // Flag to track if the Book ID has been set
 
     @Override
@@ -130,6 +135,7 @@ public class BorrowBook extends Application {
                 return;
             }
 
+
             boolean find = false;
             for (Book book : User.books) {
                 if (book.getId_buku().equals(inputID)) {
@@ -154,15 +160,41 @@ public class BorrowBook extends Application {
                         }
                         start(primaryStage);
                         LocalDateTime now = LocalDateTime.now();
-                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(" yyyy-MM-dd ");
                         String formattedDateTime = now.format(formatter);
                         LocalDateTime returnDate = now.plus(7, ChronoUnit.DAYS);
                         String formattedReturnDate = returnDate.format(formatter);
-                        showPopupNotification(primaryStage, "NIM: " + User.loginStudent + "\nBook borrowed successfully on: " + formattedDateTime + "\nBook Must Be Returned on: " + formattedReturnDate + "(7 Days");
+
+                        SendEmail sendEmail = new SendEmail();
+
+                        try {
+                            String subject = "Peminjaman Buku Berhasil!";
+                            String body = "Terimakasih telah berkunjung ke perpustakaan pusat UMM.\n"
+                                    + "Berikut lampiran tentang buku yang telah dipinjam :\n\n"
+                                    + "Book ID    : " + book.getId_buku() + "\n"
+                                    + "Title      : " + book.getTitle() + "\n"
+                                    + "Category   : " + book.getCategory() + "\n"
+                                    + "Duration of borrowing : " + " 7 days\n\n"
+                                    + "Batas pengembalian   : " + LocalDate.now().plusDays(7) + "\n\n"
+                                    + sendEmail.dateinfo();
+                          if(LoginStudent.nimTextField.getText().equals("202310370311001")) {
+                              sendEmail.sendEmail(Email1, subject, body);
+                              showPopupNotification(primaryStage, "NIM: " + User.loginStudent + "\n Book Borrowed Successfully On: " + formattedDateTime + "\n Book Must Be Returned On: " + formattedReturnDate + " (7 Days)" + Email1);
+
+                          }else{
+                              sendEmail.sendEmail(Email2, subject, body);
+                              showPopupNotification(primaryStage, "NIM: " + User.loginStudent + "\n Book Borrowed Successfully On: " + formattedDateTime + "\n Book Must Be Returned On: " + formattedReturnDate + " (7 Days)" + Email2);
+                          }
+
+                        } catch (Exception e) {
+                            System.out.println("Error sending email");
+                        }
                         return;
                     }
                 }
+
             }
+
 
             if (!find) {
                 errorLabel.setText("Book ID not found");

@@ -1,5 +1,6 @@
 package org.example.demo;
 
+
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -12,6 +13,7 @@ public class SendEmail {
 
     private final String username = "adnanamhar138@gmail.com";
     private final String password = "pnsufzykqwjkwwrp";
+    private static final String recipientgetnim = LoginStudent.nimTextField.getText();
     private Properties props;
     private Session session;
 
@@ -32,6 +34,7 @@ public class SendEmail {
     }
 
 
+
     public void sendEmail(String recipientEmail, String subject, String body) {
         try {
             Message message = new MimeMessage(session);
@@ -47,7 +50,6 @@ public class SendEmail {
             throw new RuntimeException(e);
         }
     }
-
 
     public String dateinfo() {
         Date currentDate = new Date();

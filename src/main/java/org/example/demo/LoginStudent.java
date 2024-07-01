@@ -15,6 +15,7 @@ import org.example.demo.Database.User;
 import org.example.demo.Student.MenuStudent;
 
 public class LoginStudent extends Application {
+    public static TextField nimTextField = new TextField();
 
     @Override
     public void start(Stage primaryStage) {
@@ -47,7 +48,7 @@ public class LoginStudent extends Application {
         errorLabel.setTextFill(Color.RED);
 
         // Create the TextFields
-        TextField nimTextField = new TextField();
+
         nimTextField.setLayoutX(163);
         nimTextField.setLayoutY(154);
         nimTextField.setPrefSize(381, 40);

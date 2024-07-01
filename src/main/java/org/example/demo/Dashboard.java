@@ -43,8 +43,9 @@ public class Dashboard extends Application {
     };
 
     private final String[] bookCovers = {
-            "file:src/main/java/org/example/demo/Image/buku2.png",
-            "file:src/main/java/org/example/demo/Image/buku1.png"
+            "file:src/main/java/org/example/demo/Image/buku1.png",
+            "file:src/main/java/org/example/demo/Image/buku2.png"
+
     };
 
     // Daftar background untuk mode terang dan mode gelap
@@ -54,8 +55,9 @@ public class Dashboard extends Application {
     );
 
     private List<String> darkModeBackgrounds = List.of(
-            "file:src/main/java/org/example/demo/Image/bg2black.png",
-            "file:src/main/java/org/example/demo/Image/bg1black.gif"
+            "file:src/main/java/org/example/demo/Image/bg1black.gif",
+            "file:src/main/java/org/example/demo/Image/bg2black.png"
+
     );
 
 
@@ -149,8 +151,10 @@ public class Dashboard extends Application {
             animateTransition(root, isDarkMode ? Color.WHITE : Color.BLACK, isDarkMode ? Color.BLACK : Color.WHITE, appName, switchButton, "file:src/main/java/org/example/demo/Image/" + (isDarkMode ? "moon" : "sun") + ".png");
 
             if (isDarkMode) {
+
                 animateTransition(root, Color.WHITE, Color.BLACK, appName, switchButton, "file:src/main/java/org/example/demo/Image/moon.png");
                 changeBackgroundForDarkMode(true, backgroundView); // Panggil fungsi untuk mengubah background saat mode gelap
+
 
             } else {
                 animateTransition(root, Color.BLACK, Color.WHITE, appName, switchButton, "file:src/main/java/org/example/demo/Image/sun.png");
@@ -230,7 +234,7 @@ public class Dashboard extends Application {
         }
 
         // Deklarasi tombol navigasi kiri dan kanan
-        HBox navigationButtons = new HBox(-10);
+        HBox navigationButtons = new HBox(-0);
         navigationButtons.setAlignment(Pos.CENTER);
         navigationButtons.setPadding(new Insets(10));
 
@@ -302,7 +306,7 @@ public class Dashboard extends Application {
 
     private void changeBackgroundForDarkMode(boolean isDarkMode, ImageView backgroundView) {
         List<String> currentBackgrounds = isDarkMode ? darkModeBackgrounds : lightModeBackgrounds;
-        currentIndexs = (currentIndexs + 1) % currentBackgrounds.size();
+        currentIndexs = (currentIndexs) % currentBackgrounds.size();
         backgroundView.setImage(new Image(currentBackgrounds.get(currentIndexs)));
         bookCover.setImage(new Image(bookCovers[currentIndexs]));
     }
