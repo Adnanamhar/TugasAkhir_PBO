@@ -9,11 +9,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
@@ -25,41 +22,15 @@ import org.example.demo.Database.Student;
 import org.example.demo.Database.User;
 import org.example.demo.Time.CurrentDateTimeApp;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Dashboard extends Application {
 
     public static boolean sudahTambah = false;
 
     private boolean isDarkMode = false;
-    private int currentIndex = 0;
-    private int currentIndexs = 0;
-    private ImageView bookCover;
 
-    private final String[] backgrounds = {
-            "file:src/main/java/org/example/demo/Image/bg1white.gif",
-            "file:src/main/java/org/example/demo/Image/bg2white.png"
-    };
-
-    private final String[] bookCovers = {
-            "file:src/main/java/org/example/demo/Image/buku1.png",
-            "file:src/main/java/org/example/demo/Image/buku2.png"
-
-    };
-
-    // Daftar background untuk mode terang dan mode gelap
-    private List<String> lightModeBackgrounds = List.of(
-            "file:src/main/java/org/example/demo/Image/bg1white.gif",
-            "file:src/main/java/org/example/demo/Image/bg2white.png"
-    );
-
-    private List<String> darkModeBackgrounds = List.of(
-            "file:src/main/java/org/example/demo/Image/bg1black.gif",
-            "file:src/main/java/org/example/demo/Image/bg2black.png"
-
-    );
-
+    // Background paths
+    private final String lightModeBackground = "file:src/main/java/org/example/demo/Image/bgLight.png";
+    private final String darkModeBackground = "file:src/main/java/org/example/demo/Image/bgDark.png";
 
     public void addTempStudent() {
         User.students.add(new Student("adnan", "202310370311001", "Teknik", "Informatika"));
@@ -83,7 +54,7 @@ public class Dashboard extends Application {
 
         BorderPane root = new BorderPane();
 
-        ImageView backgroundView = new ImageView(new Image(backgrounds[currentIndex]));
+        ImageView backgroundView = new ImageView(new Image(lightModeBackground));
         backgroundView.setPreserveRatio(false);
 
         root.getChildren().add(backgroundView);
@@ -146,22 +117,11 @@ public class Dashboard extends Application {
             DarkLightMode.toggleTheme();
             DarkLightMode.applyTheme(root);
             isDarkMode = !isDarkMode;
-            topSection.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+            topSection.setBackground(new Background(new BackgroundFill(isDarkMode ? Color.BLACK : Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
             logo.setImage(new Image("file:src/main/java/org/example/demo/Image/logo" + (isDarkMode ? "_dark" : "") + ".png"));
             animateTransition(root, isDarkMode ? Color.WHITE : Color.BLACK, isDarkMode ? Color.BLACK : Color.WHITE, appName, switchButton, "file:src/main/java/org/example/demo/Image/" + (isDarkMode ? "moon" : "sun") + ".png");
 
-            if (isDarkMode) {
-
-                animateTransition(root, Color.WHITE, Color.BLACK, appName, switchButton, "file:src/main/java/org/example/demo/Image/moon.png");
-                changeBackgroundForDarkMode(true, backgroundView); // Panggil fungsi untuk mengubah background saat mode gelap
-
-
-            } else {
-                animateTransition(root, Color.BLACK, Color.WHITE, appName, switchButton, "file:src/main/java/org/example/demo/Image/sun.png");
-                topSection.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-                logo.setImage(new Image("file:src/main/java/org/example/demo/Image/logo.png"));
-                changeBackgroundForDarkMode(false, backgroundView); // Panggil fungsi untuk mengubah background saat mode terang
-            }
+            changeBackgroundForDarkMode(isDarkMode, backgroundView);
         });
         switchButton.setImage("file:src/main/java/org/example/demo/Image/sun.png");
 
@@ -182,16 +142,17 @@ public class Dashboard extends Application {
         topSection.getChildren().addAll(logo, appName, rightButtons);
 
         // Center section
-        HBox centerSection = new HBox(50);
+        VBox centerSection = new VBox(20);
         centerSection.setPadding(new Insets(20));
+        centerSection.setAlignment(Pos.CENTER);
 
         // Slogan section
         VBox sloganSection = new VBox(20);
         sloganSection.setPadding(new Insets(30));
         sloganSection.setAlignment(Pos.CENTER);
 
-        Label sloganLabel = new Label("Welcome to MyLibrary!");
-        sloganLabel.setFont(new Font("System Bold", 28));
+        Label sloganLabel = new Label("Welcome to E-Library!");
+        sloganLabel.setFont(new Font("System Bold", 48));
 
         Button centerSignInButton = new Button("Sign In");
         centerSignInButton.setFont(new Font(14));
@@ -203,60 +164,7 @@ public class Dashboard extends Application {
 
         sloganSection.getChildren().addAll(sloganLabel, centerSignInButton);
 
-        // Book display
-        VBox bookDisplay = new VBox(10);
-        bookDisplay.setAlignment(Pos.CENTER_RIGHT);
-        bookDisplay.setPadding(new Insets(10));
-
-        // Load books (example)
-        List<Book> books = loadBooks();
-        if (!books.isEmpty()) {
-            Book book = books.get(0);
-            VBox bookBox = new VBox(5);
-            bookBox.setAlignment(Pos.CENTER);
-
-            bookCover = new ImageView(new Image(bookCovers[currentIndex]));
-            bookCover.setFitHeight(220);
-            bookCover.setFitWidth(170);
-
-            bookCover.setOnMouseEntered(e -> {
-                bookCover.setFitHeight(240);
-                bookCover.setFitWidth(190);
-            });
-
-            bookCover.setOnMouseExited(e -> {
-                bookCover.setFitHeight(220);
-                bookCover.setFitWidth(170);
-            });
-
-            bookBox.getChildren().addAll(bookCover);
-            bookDisplay.getChildren().add(bookBox);
-        }
-
-        // Deklarasi tombol navigasi kiri dan kanan
-        HBox navigationButtons = new HBox(-0);
-        navigationButtons.setAlignment(Pos.CENTER);
-        navigationButtons.setPadding(new Insets(10));
-
-        CircleButton leftButton = new CircleButton();
-        leftButton.setImage("file:src/main/java/org/example/demo/Image/arrowback.png");
-        leftButton.setOnAction(e -> changeBackground(-1, backgroundView));
-
-        CircleButton rightButton = new CircleButton();
-        rightButton.setImage("file:src/main/java/org/example/demo/Image/arrownext.png");
-        rightButton.setOnAction(e -> changeBackground(1, backgroundView));
-
-        navigationButtons.getChildren().addAll(leftButton, rightButton);
-        bookDisplay.getChildren().add(navigationButtons);
-
-        // Navigation control
-        HBox navigationControl = new HBox(-10, leftButton, rightButton);
-        navigationControl.setAlignment(Pos.CENTER);
-        navigationControl.setPadding(new Insets(-20));
-
-        bookDisplay.getChildren().add(navigationControl);
-
-        centerSection.getChildren().addAll(sloganSection, bookDisplay);
+        centerSection.getChildren().addAll(sloganSection);
 
         root.setTop(topSection);
         root.setCenter(centerSection);
@@ -278,39 +186,17 @@ public class Dashboard extends Application {
             double width = newVal.doubleValue();
             if (width > 600) {
                 topSection.setSpacing(10);
-                centerSection.setSpacing(10);
                 sloganSection.setPadding(new Insets(10));
             } else {
                 topSection.setSpacing(20);
-                centerSection.setSpacing(50);
                 sloganSection.setPadding(new Insets(50));
             }
         });
     }
 
-    private List<Book> loadBooks() {
-        // Mock data, replace with actual book data from database
-        List<Book> books = new ArrayList<>();
-        books.add(new Book("1", "Selalu Ada Cinta Di Setiap Cerita", "Author 1", "Category 1", 10));
-        books.add(new Book("2", "Rentang Waktu", "Author 2", "Category 2", 5));
-
-        return books;
-    }
-
-    // Metode untuk mengubah latar belakang dan sampul buku
-    private void changeBackground(int direction, ImageView backgroundView) {
-        currentIndex = (currentIndex + direction + backgrounds.length) % backgrounds.length;
-        backgroundView.setImage(new Image(backgrounds[currentIndex]));
-        bookCover.setImage(new Image(bookCovers[currentIndex]));
-    }
-
     private void changeBackgroundForDarkMode(boolean isDarkMode, ImageView backgroundView) {
-        List<String> currentBackgrounds = isDarkMode ? darkModeBackgrounds : lightModeBackgrounds;
-        currentIndexs = (currentIndexs) % currentBackgrounds.size();
-        backgroundView.setImage(new Image(currentBackgrounds.get(currentIndexs)));
-        bookCover.setImage(new Image(bookCovers[currentIndexs]));
+        backgroundView.setImage(new Image(isDarkMode ? darkModeBackground : lightModeBackground));
     }
-
 
     private void animateTransition(BorderPane root, Color fromColor, Color toColor, Label appName, CircleButton switchButton, String iconPath) {
         FadeTransition fadeTransition = new FadeTransition(Duration.millis(300), root);
