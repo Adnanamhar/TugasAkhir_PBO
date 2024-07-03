@@ -2,6 +2,8 @@ module org.example.demo {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.mail;
+    requires java.sql;
+    requires sqlite.jdbc;
 
 
     opens org.example.demo to javafx.fxml;
@@ -9,7 +11,9 @@ module org.example.demo {
     exports org.example.demo;
     exports org.example.demo.Admin;
     exports org.example.demo.Student;
+    exports org.example.demo.Main to javafx.graphics;
     exports org.example.demo.Time to javafx.graphics;
+
 
 
 }

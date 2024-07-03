@@ -18,6 +18,7 @@ import javafx.stage.Screen;
 import javafx.geometry.Rectangle2D;
 import javafx.util.Duration;
 import org.example.demo.Database.Book;
+import org.example.demo.Database.Database;
 import org.example.demo.Database.Student;
 import org.example.demo.Database.User;
 import org.example.demo.Time.CurrentDateTimeApp;
@@ -32,10 +33,7 @@ public class Dashboard extends Application {
     private final String lightModeBackground = "file:src/main/java/org/example/demo/Image/bgLight.png";
     private final String darkModeBackground = "file:src/main/java/org/example/demo/Image/bgDark.png";
 
-    public void addTempStudent() {
-        User.students.add(new Student("adnan", "202310370311001", "Teknik", "Informatika"));
-        User.students.add(new Student("fahmi", "202310370311041", "FK", "Kedokteran"));
-    }
+
 
     public void addTempBooks() {
         User.books.add(new Book("388c-e681-9152", "title", "author", "History", 4));
@@ -46,11 +44,8 @@ public class Dashboard extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        if (!sudahTambah) {
-            addTempStudent();
-            addTempBooks();
-            sudahTambah = true;
-        }
+        Database.student_database();
+
 
         BorderPane root = new BorderPane();
 
@@ -246,8 +241,10 @@ public class Dashboard extends Application {
             popup.hide();
         });
 
+
         return popup;
     }
+
 
     public static void main(String[] args) {
         launch(args);

@@ -19,6 +19,7 @@ import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import org.example.demo.DarkLightMode;
 import org.example.demo.Database.Book;
+import org.example.demo.Database.Database;
 import org.example.demo.Database.User;
 
 import java.util.UUID;
@@ -144,7 +145,10 @@ public class BookAdd extends Application {
 
             String id = generateId();
             User.books.add(new Book(id, title, author, category, stock));
+            Database.book_addBook(id, titleTextField.getText(), authorTextField.getText(), category, stock);
+
             showPopupNotification(primaryStage, "Book added successfully!");
+
             MenuAdmin menuAdmin = new MenuAdmin();
             menuAdmin.start(primaryStage);
         });

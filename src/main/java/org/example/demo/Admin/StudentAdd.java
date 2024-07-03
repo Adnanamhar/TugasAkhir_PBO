@@ -17,6 +17,7 @@ import javafx.util.Duration;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import org.example.demo.DarkLightMode;
+import org.example.demo.Database.Database;
 import org.example.demo.Database.Student;
 import org.example.demo.Database.User;
 
@@ -24,6 +25,7 @@ public class StudentAdd extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+
         AnchorPane root = new AnchorPane();
         root.setPrefSize(700, 500);
 
@@ -134,6 +136,8 @@ public class StudentAdd extends Application {
             }
 
             User.students.add(new Student(name, nim, faculty, program));
+            Database.student_addStudent(nameField.getText(), nimField.getText(), facultyField.getText(), programField.getText());
+
             showPopupNotification(primaryStage, "Student added successfully!");
             MenuAdmin menuAdmin = new MenuAdmin();
             menuAdmin.start(primaryStage);

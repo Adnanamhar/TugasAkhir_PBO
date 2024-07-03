@@ -1,6 +1,7 @@
 package org.example.demo;
 
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -8,6 +9,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -22,7 +24,7 @@ public class LoginStudent extends Application {
 
         // Create the AnchorPane
         AnchorPane root = new AnchorPane();
-        root.setPrefSize(700, 500);
+
 
         // Create the Labels
         Label titleLabel = new Label("Login Student");
@@ -117,9 +119,12 @@ public class LoginStudent extends Application {
         // Add all components to the AnchorPane
         root.getChildren().addAll(titleLabel, nimLabel, passwordLabel, nimTextField, passwordTextField, loginButton, adminLoginButton, errorLabel);
 
+
         Scene scene = new Scene(root);
         primaryStage.setTitle("Login Form");
         primaryStage.setScene(scene);
+        primaryStage.setFullScreen(true);
+        primaryStage.setFullScreenExitHint("");
         primaryStage.show();
 
         // Apply theme

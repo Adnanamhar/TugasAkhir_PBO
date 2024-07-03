@@ -26,6 +26,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import org.example.demo.DarkLightMode;
 import org.example.demo.Database.Book;
+import org.example.demo.Database.Database;
 import org.example.demo.Database.User;
 import org.example.demo.LoginStudent;
 import org.example.demo.SendEmail;
@@ -44,6 +45,9 @@ public class BorrowBook extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        User.books.clear();
+        Database.book_bookDatabase();
+
         AnchorPane root = new AnchorPane();
         root.setPrefSize(700, 500);
 
@@ -257,3 +261,4 @@ public class BorrowBook extends Application {
         launch(args);
     }
 }
+
