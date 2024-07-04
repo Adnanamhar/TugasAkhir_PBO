@@ -69,7 +69,7 @@ public class LoginStudent extends Application {
         // Create the Buttons
         Button loginButton = new Button("Login");
         loginButton.setFont(new Font("System Bold", 18));
-        loginButton.setPrefSize(100, 50);
+        loginButton.setPrefSize(100, 40);
 
         loginButton.setOnAction(actionEvent -> {
             errorLabel.setText("");

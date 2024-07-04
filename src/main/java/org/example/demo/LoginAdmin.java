@@ -1,6 +1,7 @@
 package org.example.demo;
 
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.control.PasswordField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -11,6 +12,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.example.demo.Admin.MenuAdmin;
@@ -30,7 +34,6 @@ public class LoginAdmin extends Application {
         // Create the AnchorPane
         AnchorPane root = new AnchorPane();
 
-
         ImageView backgroundViews = new ImageView(new Image(bgAll));
         backgroundViews.setPreserveRatio(false);
 
@@ -46,43 +49,31 @@ public class LoginAdmin extends Application {
         // Create the Labels
         Label titleLabel = new Label("Login Admin");
         titleLabel.setFont(new Font("System Bold", 36));
-        titleLabel.setLayoutX(239);
-        titleLabel.setLayoutY(54);
 
         Label usernameLabel = new Label("Username");
         usernameLabel.setFont(new Font(18));
-        usernameLabel.setLayoutX(136);
-        usernameLabel.setLayoutY(126);
 
         Label passwordLabel = new Label("Password");
         passwordLabel.setFont(new Font(18));
-        passwordLabel.setLayoutX(139);
-        passwordLabel.setLayoutY(212);
 
         Label errorLabel = new Label();
         errorLabel.setFont(new Font(18));
-        errorLabel.setLayoutX(157);
-        errorLabel.setLayoutY(395);
-        errorLabel.setPrefSize(381, 17);
         errorLabel.setTextFill(Color.RED);
+        errorLabel.setAlignment(Pos.CENTER);
 
         // Create the TextFields
         TextField usernameTextField = new TextField();
-        usernameTextField.setLayoutX(163);
-        usernameTextField.setLayoutY(154);
-        usernameTextField.setPrefSize(381, 40);
+        usernameTextField.setPrefSize(200, 40);
+        usernameTextField.setMaxWidth(200);
 
         PasswordField passwordTextField = new PasswordField();
-        passwordTextField.setLayoutX(163);
-        passwordTextField.setLayoutY(245);
-        passwordTextField.setPrefSize(381, 40);
+        passwordTextField.setPrefSize(200, 40);
+        passwordTextField.setMaxWidth(200);
 
         // Create the Buttons
         Button loginButton = new Button("Login");
         loginButton.setFont(new Font("System Bold", 18));
-        loginButton.setLayoutX(279);
-        loginButton.setLayoutY(318);
-        loginButton.setPrefSize(149, 61);
+        loginButton.setPrefSize(100, 40);
 
         loginButton.setOnAction(actionEvent -> {
             errorLabel.setText("");
@@ -146,17 +137,38 @@ public class LoginAdmin extends Application {
 
         Button studentLoginButton = new Button("Login Student");
         studentLoginButton.setFont(new Font("System Bold", 14));
-        studentLoginButton.setLayoutX(14);
-        studentLoginButton.setLayoutY(446);
-        studentLoginButton.setPrefSize(119, 40);
+        studentLoginButton.setPrefSize(150, 40);
 
         studentLoginButton.setOnAction(actionEvent -> {
             LoginStudent loginStudent = new LoginStudent();
             loginStudent.start(primaryStage);
         });
 
-        // Add all components to the AnchorPane
-        root.getChildren().addAll(titleLabel, usernameLabel, passwordLabel, usernameTextField, passwordTextField, loginButton, studentLoginButton, errorLabel);
+        // Create a VBox to center all components
+        VBox vbox = new VBox(10, titleLabel, usernameLabel, usernameTextField, passwordLabel, passwordTextField, loginButton, errorLabel);
+        vbox.setAlignment(Pos.CENTER);
+
+        HBox hBox = new HBox(20, studentLoginButton);
+        hBox.setAlignment(Pos.BOTTOM_LEFT);
+
+        // Create a StackPane to center the VBox in the scene
+        StackPane stackPane = new StackPane(vbox);
+        stackPane.setAlignment(Pos.CENTER);
+
+        StackPane stackPanes = new StackPane(hBox);
+        stackPanes.setAlignment(Pos.BOTTOM_LEFT);
+
+        root.getChildren().add(stackPane);
+        AnchorPane.setTopAnchor(stackPane, 0.0);
+        AnchorPane.setRightAnchor(stackPane, 0.0);
+        AnchorPane.setBottomAnchor(stackPane, 0.0);
+        AnchorPane.setLeftAnchor(stackPane, 0.0);
+
+        root.getChildren().add(stackPanes);
+        AnchorPane.setTopAnchor(stackPanes, 0.0);
+        AnchorPane.setRightAnchor(stackPanes, 0.0);
+        AnchorPane.setBottomAnchor(stackPanes, 20.0);
+        AnchorPane.setLeftAnchor(stackPanes, 20.0);
 
         // Create the Scene and set it on the Stage
         Scene scene = new Scene(root);
