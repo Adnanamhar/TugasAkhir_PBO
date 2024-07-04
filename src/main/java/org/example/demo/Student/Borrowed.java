@@ -2,6 +2,8 @@ package org.example.demo.Student;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -28,6 +30,8 @@ import org.example.demo.DarkLightMode;
 import org.example.demo.Database.Book;
 import org.example.demo.Database.User;
 
+import static org.example.demo.LoginAdmin.bgAll;
+
 public class Borrowed extends Application {
 
     private boolean bookIdSelected = false; // Melacak apakah ID buku dipilih dari tabel
@@ -35,8 +39,21 @@ public class Borrowed extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+
         AnchorPane root = new AnchorPane();
         root.setPrefSize(700, 500);
+
+        ImageView backgroundViews = new ImageView(new Image(bgAll));
+        backgroundViews.setPreserveRatio(false);
+
+        root.getChildren().add(backgroundViews);
+
+        root.widthProperty().addListener((obs, oldVal, newVal) -> {
+            backgroundViews.setFitWidth(newVal.doubleValue());
+        });
+        root.heightProperty().addListener((obs, oldVal, newVal) -> {
+            backgroundViews.setFitHeight(newVal.doubleValue());
+        });
 
         Label titleLabel = new Label("Return Book");
         titleLabel.setLayoutX(14.0);

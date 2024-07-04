@@ -2,6 +2,8 @@ package org.example.demo.Student;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -42,6 +44,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
+import static org.example.demo.LoginAdmin.bgAll;
+
 public class BorrowBook extends Application {
 
     public static final String Email1 = "adnanamhar123@gmail.com";
@@ -55,6 +59,18 @@ public class BorrowBook extends Application {
 
         AnchorPane root = new AnchorPane();
         root.setPrefSize(700, 500);
+
+        ImageView backgroundViews = new ImageView(new Image(bgAll));
+        backgroundViews.setPreserveRatio(false);
+
+        root.getChildren().add(backgroundViews);
+
+        root.widthProperty().addListener((obs, oldVal, newVal) -> {
+            backgroundViews.setFitWidth(newVal.doubleValue());
+        });
+        root.heightProperty().addListener((obs, oldVal, newVal) -> {
+            backgroundViews.setFitHeight(newVal.doubleValue());
+        });
 
         Label titleLabel = new Label("Borrow Book");
         titleLabel.setLayoutX(14.0);
