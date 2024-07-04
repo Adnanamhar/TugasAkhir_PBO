@@ -11,7 +11,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -41,47 +43,33 @@ public class LoginStudent extends Application {
             backgroundViews.setFitHeight(newVal.doubleValue());
         });
 
-
         // Create the Labels
         Label titleLabel = new Label("Login Student");
         titleLabel.setFont(new Font("System Bold", 36));
-        titleLabel.setLayoutX(231);
-        titleLabel.setLayoutY(55);
 
         Label nimLabel = new Label("NIM");
         nimLabel.setFont(new Font(18));
-        nimLabel.setLayoutX(136);
-        nimLabel.setLayoutY(126);
 
         Label passwordLabel = new Label("Password");
         passwordLabel.setFont(new Font(18));
-        passwordLabel.setLayoutX(139);
-        passwordLabel.setLayoutY(212);
 
         Label errorLabel = new Label();
         errorLabel.setFont(new Font(18));
-        errorLabel.setLayoutX(157);
-        errorLabel.setLayoutY(395);
-        errorLabel.setPrefSize(381, 17);
         errorLabel.setTextFill(Color.RED);
+        errorLabel.setAlignment(Pos.CENTER);
 
         // Create the TextFields
-
-        nimTextField.setLayoutX(163);
-        nimTextField.setLayoutY(154);
-        nimTextField.setPrefSize(381, 40);
+        nimTextField.setPrefSize(250, 40);
+        nimTextField.setMaxWidth(250);      // Set max width
 
         PasswordField passwordTextField = new PasswordField();
-        passwordTextField.setLayoutX(163);
-        passwordTextField.setLayoutY(245);
-        passwordTextField.setPrefSize(381, 40);
+        passwordTextField.setPrefSize(250, 40);
+        passwordTextField.setMaxWidth(250);      // Set max width
 
         // Create the Buttons
         Button loginButton = new Button("Login");
         loginButton.setFont(new Font("System Bold", 18));
-        loginButton.setLayoutX(279);
-        loginButton.setLayoutY(318);
-        loginButton.setPrefSize(149, 61);
+        loginButton.setPrefSize(100, 50);
 
         loginButton.setOnAction(actionEvent -> {
             errorLabel.setText("");
@@ -123,18 +111,38 @@ public class LoginStudent extends Application {
 
         Button adminLoginButton = new Button("Login Admin");
         adminLoginButton.setFont(new Font("System Bold", 14));
-        adminLoginButton.setLayoutX(14);
-        adminLoginButton.setLayoutY(446);
-        adminLoginButton.setPrefSize(119, 40);
+        adminLoginButton.setPrefSize(100, 40);
 
         adminLoginButton.setOnAction(actionEvent -> {
             LoginAdmin loginAdmin = new LoginAdmin();
             loginAdmin.start(primaryStage);
         });
 
-        // Add all components to the AnchorPane
-        root.getChildren().addAll(titleLabel, nimLabel, passwordLabel, nimTextField, passwordTextField, loginButton, adminLoginButton, errorLabel);
+        // Create a VBox to center all components
+        VBox vbox = new VBox(10, titleLabel, nimLabel, nimTextField, passwordLabel, passwordTextField, loginButton, errorLabel);
+        vbox.setAlignment(Pos.CENTER);
 
+        HBox hBox = new HBox(20, adminLoginButton);
+        hBox.setAlignment(Pos.BOTTOM_LEFT);
+
+        // Create a StackPane to center the VBox in the scene
+        StackPane stackPane = new StackPane(vbox);
+        stackPane.setAlignment(Pos.CENTER);
+
+        StackPane stackPanes = new StackPane(hBox);
+        stackPanes.setAlignment(Pos.BOTTOM_LEFT);
+
+        root.getChildren().add(stackPane);
+        AnchorPane.setTopAnchor(stackPane, 0.0);
+        AnchorPane.setRightAnchor(stackPane, 0.0);
+        AnchorPane.setBottomAnchor(stackPane, 0.0);
+        AnchorPane.setLeftAnchor(stackPane, 0.0);
+
+        root.getChildren().add(stackPanes);
+        AnchorPane.setTopAnchor(stackPanes, 0.0);
+        AnchorPane.setRightAnchor(stackPanes, 0.0);
+        AnchorPane.setBottomAnchor(stackPanes, 20.0);
+        AnchorPane.setLeftAnchor(stackPanes, 20.0);
 
         Scene scene = new Scene(root);
         primaryStage.setTitle("Login Form");

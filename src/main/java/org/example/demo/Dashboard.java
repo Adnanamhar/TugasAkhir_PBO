@@ -174,6 +174,8 @@ public class Dashboard extends Application {
         Scene scene = new Scene(root, screenBounds.getWidth(), screenBounds.getHeight());
         primaryStage.setTitle("Perpustakaanku");
         primaryStage.setScene(scene);
+        primaryStage.setFullScreen(true);
+        primaryStage.setFullScreenExitHint("");
         primaryStage.show();
 
         // Make the layout responsive
