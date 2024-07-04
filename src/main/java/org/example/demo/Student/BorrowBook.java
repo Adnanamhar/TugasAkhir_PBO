@@ -139,13 +139,21 @@ public class BorrowBook extends Application {
                 return;
             }
 
-
             boolean find = false;
             for (Book book : User.books) {
                 if (book.getId_buku().equals(inputID)) {
                     find = true;
                     if (book.getStock() > 0) {
                         book.setStock(book.getStock() - 1);
+
+                        // Update ObservableList to reflect the stock change
+                        bookData.clear();
+                        for (Book b : User.books) {
+                            if (b.getStock() > 0) {
+                                bookData.add(b);
+                            }
+                        }
+
                         int indexBorrowBooks = -1;
                         for (int i = 0; i < User.borrowBooks.size(); i++) {
                             if (User.borrowBooks.get(i).get(0).equals(User.loginStudent)) {
@@ -162,7 +170,10 @@ public class BorrowBook extends Application {
                         } else {
                             User.borrowBooks.get(indexBorrowBooks).add(book.getId_buku());
                         }
-                        start(primaryStage);
+
+                        // Update the TableView to show the updated stock
+                        tableView.refresh();
+
                         LocalDateTime now = LocalDateTime.now();
                         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(" yyyy-MM-dd ");
                         String formattedDateTime = now.format(formatter);
@@ -181,14 +192,15 @@ public class BorrowBook extends Application {
                                     + "Duration of borrowing : " + " 7 days\n\n"
                                     + "Batas pengembalian   : " + LocalDate.now().plusDays(7) + "\n\n"
                                     + sendEmail.dateinfo();
-                          if(LoginStudent.nimTextField.getText().equals("202310370311001")) {
-                              sendEmail.sendEmail(Email1, subject, body);
-                              showPopupNotification(primaryStage, "NIM: " + User.loginStudent + "\n Book Borrowed Successfully On: " + formattedDateTime + "\n Book Must Be Returned On: " + formattedReturnDate + " (7 Days)" + Email1);
 
-                          }else{
-                              sendEmail.sendEmail(Email2, subject, body);
-                              showPopupNotification(primaryStage, "NIM: " + User.loginStudent + "\n Book Borrowed Successfully On: " + formattedDateTime + "\n Book Must Be Returned On: " + formattedReturnDate + " (7 Days)" + Email2);
-                          }
+                            if (LoginStudent.nimTextField.getText().equals("202310370311001")) {
+                                sendEmail.sendEmail(Email1, subject, body);
+                                showPopupNotification(primaryStage, "NIM: " + User.loginStudent + "\n Book Borrowed Successfully On: " + formattedDateTime + "\n Book Must Be Returned On: " + formattedReturnDate + " (7 Days)" + Email1);
+
+                            } else {
+                                sendEmail.sendEmail(Email2, subject, body);
+                                showPopupNotification(primaryStage, "NIM: " + User.loginStudent + "\n Book Borrowed Successfully On: " + formattedDateTime + "\n Book Must Be Returned On: " + formattedReturnDate + " (7 Days)" + Email2);
+                            }
 
                         } catch (Exception e) {
                             System.out.println("Error sending email");
@@ -196,15 +208,15 @@ public class BorrowBook extends Application {
                         return;
                     }
                 }
-
             }
-
 
             if (!find) {
                 errorLabel.setText("Book ID not found");
                 showPopupNotification(primaryStage, "Book ID not found");
             }
         });
+
+
 
         // Menambahkan key listener ke root untuk menangani tombol Enter
         root.setOnKeyPressed(event -> {
