@@ -4,6 +4,8 @@ module org.example.demo {
     requires java.mail;
     requires java.sql;
     requires sqlite.jdbc;
+    requires org.apache.pdfbox;
+    requires activation;
 
 
     opens org.example.demo to javafx.fxml;

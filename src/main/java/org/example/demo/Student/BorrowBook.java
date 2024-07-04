@@ -2,6 +2,7 @@ package org.example.demo.Student;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.stage.PopupWindow;
 import javafx.stage.Stage;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,6 +24,10 @@ import javafx.stage.Popup;
 import javafx.util.Duration;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.example.demo.DarkLightMode;
 import org.example.demo.Database.Book;
 import org.example.demo.Database.Database;
@@ -30,6 +35,9 @@ import org.example.demo.Database.User;
 import org.example.demo.LoginStudent;
 import org.example.demo.SendEmail;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -183,6 +191,55 @@ public class BorrowBook extends Application {
                                     + "Batas pengembalian   : " + LocalDate.now().plusDays(7) + "\n\n"
                                     + sendEmail.dateinfo();
 
+                            // Create PDF
+                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                            PDDocument document = new PDDocument();
+                            PDPage page = new PDPage();
+                            document.addPage(page);
+
+                            PDPageContentStream contentStream = new PDPageContentStream(document, page);
+                            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 30);
+                            contentStream.beginText();
+                            contentStream.newLineAtOffset(100, 700);
+                            contentStream.showText("LAPORAN PEMINJAMAN BUKU");
+                            contentStream.endText();
+
+                            contentStream.setFont(PDType1Font.TIMES_BOLD, 16);
+                            contentStream.beginText();
+                            contentStream.newLineAtOffset(50, 650);
+                            contentStream.showText("        Terimakasih telah berkunjung ke E-Libray.");
+                            contentStream.newLineAtOffset(0, -45);
+                            contentStream.showText("Berikut lampiran tentang buku yang telah dipinjam :");
+                            contentStream.newLineAtOffset(0, -30);
+                            contentStream.showText("Book ID                         : " + book.getId_buku());
+                            contentStream.newLineAtOffset(0, -30);
+                            contentStream.showText("Title                           : " + book.getTitle());
+                            contentStream.newLineAtOffset(0, -30);
+                            contentStream.showText("Category                        : " + book.getCategory());
+                            contentStream.newLineAtOffset(0, -30);
+                            contentStream.showText("Duration of borrowing   : 7 days");
+                            contentStream.newLineAtOffset(0, -30);
+                            contentStream.showText("Batas pengembalian       : " + LocalDate.now().plusDays(7));
+                            contentStream.newLineAtOffset(0, -250);
+                            contentStream.showText("NB : Batas peminjaman buku di perpustakaan e-Library maximal 7 hari");
+                            contentStream.newLineAtOffset(0, -20);
+                            contentStream.showText("         dari hari peminjaman yaitu : " + LocalDate.now() + "Buku yang");
+                            contentStream.newLineAtOffset(0, -20);
+                            contentStream.showText("         telah melewati batas waktu peminjaman akan dikenakan sanksi");
+                            contentStream.newLineAtOffset(0, -20);
+                            contentStream.showText("         sesuai ketentuan yang berlaku.");
+                            contentStream.newLineAtOffset(0, -70);
+                            contentStream.showText("For More Information Contact Us: ");
+                            contentStream.newLineAtOffset(0, -30);
+                            contentStream.showText("WhatsApp : 082134079479 (Admin) ");
+                            contentStream.endText();
+
+                            contentStream.close();
+
+                            document.save(baos);
+                            document.close();
+
+                            sendEmail.sendWithAttachment(Email1, subject, body, baos.toByteArray(), "Peminjaman_Buku.pdf");
                             if (LoginStudent.nimTextField.getText().equals("202310370311001")) {
                                 sendEmail.sendEmail(Email1, subject, body);
                                 showPopupNotification(primaryStage, "NIM: " + User.loginStudent + "\n Book Borrowed Successfully On: " + formattedDateTime + "\n Book Must Be Returned On: " + formattedReturnDate + " (7 Days)" + Email1);
@@ -191,21 +248,21 @@ public class BorrowBook extends Application {
                                 sendEmail.sendEmail(Email2, subject, body);
                                 showPopupNotification(primaryStage, "NIM: " + User.loginStudent + "\n Book Borrowed Successfully On: " + formattedDateTime + "\n Book Must Be Returned On: " + formattedReturnDate + " (7 Days)" + Email2);
                             }
-
-                        } catch (Exception e) {
-                            System.out.println("Error sending email");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            showPopupNotification(primaryStage, "Failed to create PDF.");
                         }
-                        return;
                     } else {
-                        errorLabel.setText("Book empty");
-                        showPopupNotification(primaryStage, "Book empty");
+                        errorLabel.setText("Stock not available");
+                        showPopupNotification(primaryStage, "Stock not available");
                     }
+                    break;
                 }
             }
 
             if (!find) {
-                errorLabel.setText("Book ID not found");
-                showPopupNotification(primaryStage, "Book ID not found");
+                errorLabel.setText("ID not found");
+                showPopupNotification(primaryStage, "ID not found");
             }
         });
 
@@ -226,37 +283,37 @@ public class BorrowBook extends Application {
         });
 
         Scene scene = new Scene(root);
-        primaryStage.setTitle("Borrow Book");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        scene.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ESCAPE) {
+                MenuStudent menuStudent = new MenuStudent();
+                menuStudent.start(primaryStage);
+            }
+        });
 
         // Apply theme
         DarkLightMode.applyTheme(root);
+
+        primaryStage.setTitle("Borrow Book");
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
 
-    private void showPopupNotification(Stage ownerStage, String message) {
+    private void showPopupNotification(Stage primaryStage, String message) {
         Popup popup = new Popup();
         popup.setAutoHide(true);
+        popup.setHideOnEscape(true);
 
-        VBox popupContent = new VBox();
-        popupContent.setPadding(new Insets(10));
-        popupContent.setStyle("-fx-background-color: #000000; -fx-background-radius: 10;");
+        Text text = new Text(message);
+        text.setFill(Color.WHITE);
 
-        Text messageText = new Text(message);
-        messageText.setFill(Color.WHITE);
-        popupContent.getChildren().add(messageText);
+        VBox vbox = new VBox(text);
+        vbox.setStyle("-fx-background-color: black; -fx-padding: 10;");
 
-        popup.getContent().add(popupContent);
+        popup.getContent().add(vbox);
+        popup.setAnchorLocation(PopupWindow.AnchorLocation.WINDOW_BOTTOM_LEFT);
+        popup.show(primaryStage);
 
-        // Calculate position to show popup at the bottom center of the screen
-        double xPos = ownerStage.getX() + (ownerStage.getWidth() / 2) - (popupContent.getWidth() / 2);
-        double yPos = ownerStage.getY() + ownerStage.getHeight() - popupContent.getHeight() - 10;
-
-        popup.show(ownerStage, xPos, yPos);
-
-        // Hide popup after 3 seconds
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> popup.hide()));
-        timeline.setCycleCount(1);
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2), ae -> popup.hide()));
         timeline.play();
     }
 
