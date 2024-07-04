@@ -23,6 +23,10 @@ import javafx.stage.Popup;
 import javafx.util.Duration;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.example.demo.DarkLightMode;
 import org.example.demo.Database.Book;
 import org.example.demo.Database.Database;
@@ -30,6 +34,8 @@ import org.example.demo.Database.User;
 import org.example.demo.LoginStudent;
 import org.example.demo.SendEmail;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -183,6 +189,56 @@ public class BorrowBook extends Application {
                                     + "Batas pengembalian   : " + LocalDate.now().plusDays(7) + "\n\n"
                                     + sendEmail.dateinfo();
 
+                            // Create PDF
+                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                            PDDocument document = new PDDocument();
+                            PDPage page = new PDPage();
+                            document.addPage(page);
+
+                            PDPageContentStream contentStream = new PDPageContentStream(document, page);
+                            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 30);
+                            contentStream.beginText();
+                            contentStream.newLineAtOffset(100, 700);
+                            contentStream.showText("LAPORAN PEMINJAMAN BUKU");
+                            contentStream.endText();
+
+                            contentStream.setFont(PDType1Font.TIMES_BOLD, 16);
+                            contentStream.beginText();
+                            contentStream.newLineAtOffset(50, 650);
+                            contentStream.showText("        Terimakasih telah berkunjung ke E-Libray.");
+                            contentStream.newLineAtOffset(0, -45);
+                            contentStream.showText("Berikut lampiran tentang buku yang telah dipinjam :");
+                            contentStream.newLineAtOffset(0, -30);
+                            contentStream.showText("Book ID                         : " + book.getId_buku());
+                            contentStream.newLineAtOffset(0, -30);
+                            contentStream.showText("Title                           : " + book.getTitle());
+                            contentStream.newLineAtOffset(0, -30);
+                            contentStream.showText("Category                        : " + book.getCategory());
+                            contentStream.newLineAtOffset(0, -30);
+                            contentStream.showText("Duration of borrowing   : 7 days");
+                            contentStream.newLineAtOffset(0, -30);
+                            contentStream.showText("Batas pengembalian       : " + LocalDate.now().plusDays(7));
+                            contentStream.newLineAtOffset(0, -250);
+                            contentStream.showText("NB : Batas peminjaman buku di perpustakaan e-Library maximal 7 hari");
+                            contentStream.newLineAtOffset(0, -20);
+                            contentStream.showText("         dari hari peminjaman yaitu : " + LocalDate.now() + "Buku yang");
+                            contentStream.newLineAtOffset(0, -20);
+                            contentStream.showText("         telah melewati batas waktu peminjaman akan dikenakan sanksi");
+                            contentStream.newLineAtOffset(0, -20);
+                            contentStream.showText("         sesuai ketentuan yang berlaku.");
+                            contentStream.newLineAtOffset(0, -70);
+                            contentStream.showText("For More Information Contact Us: ");
+                            contentStream.newLineAtOffset(0, -30);
+                            contentStream.showText("WhatsApp : 082134079479 (Admin) ");
+                            contentStream.endText();
+
+                            contentStream.close();
+
+                            document.save(baos);
+                            document.close();
+
+                            sendEmail.sendWithAttachment(Email1, subject, body, baos.toByteArray(), "Peminjaman_Buku.pdf");
+
                             if (LoginStudent.nimTextField.getText().equals("202310370311001")) {
                                 sendEmail.sendEmail(Email1, subject, body);
                                 showPopupNotification(primaryStage, "NIM: " + User.loginStudent + "\n Book Borrowed Successfully On: " + formattedDateTime + "\n Book Must Be Returned On: " + formattedReturnDate + " (7 Days)" + Email1);
@@ -191,15 +247,19 @@ public class BorrowBook extends Application {
                                 sendEmail.sendEmail(Email2, subject, body);
                                 showPopupNotification(primaryStage, "NIM: " + User.loginStudent + "\n Book Borrowed Successfully On: " + formattedDateTime + "\n Book Must Be Returned On: " + formattedReturnDate + " (7 Days)" + Email2);
                             }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            showPopupNotification(primaryStage, "Failed to create PDF.");
 
                         } catch (Exception e) {
                             System.out.println("Error sending email");
                         }
                         return;
                     } else {
-                        errorLabel.setText("Book empty");
-                        showPopupNotification(primaryStage, "Book empty");
+                        errorLabel.setText("Stock not available");
+                        showPopupNotification(primaryStage, "Stock not available");
                     }
+                    break;
                 }
             }
 
@@ -226,12 +286,29 @@ public class BorrowBook extends Application {
         });
 
         Scene scene = new Scene(root);
+        scene.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ESCAPE) {
+                MenuStudent menuStudent = new MenuStudent();
+                menuStudent.start(primaryStage);
+            }
+        });
         primaryStage.setTitle("Borrow Book");
         primaryStage.setScene(scene);
         primaryStage.show();
 
         // Apply theme
         DarkLightMode.applyTheme(root);
+        // Apply dark mode to the table if dark theme is active
+        if (DarkLightMode.isDarkMode()) {
+            applyDarkModeToTable(tableView);
+        }
+    }
+
+    private void applyDarkModeToTable(TableView<Book> tableView) {
+        tableView.setStyle("-fx-background-color: #333333; -fx-text-fill: #ffffff; -fx-border-color: #444444;");
+        for (TableColumn<Book, ?> column : tableView.getColumns()) {
+            column.setStyle("-fx-background-color: #333333; -fx-text-fill: #ffffff; -fx-border-color: #444444;");
+        }
     }
 
     private void showPopupNotification(Stage ownerStage, String message) {
