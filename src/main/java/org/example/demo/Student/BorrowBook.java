@@ -14,6 +14,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -225,6 +226,17 @@ public class BorrowBook extends Application {
             }
         });
 
+        // Menambahkan event handler untuk mouse click pada tabel
+        tableView.setOnMouseClicked(event -> {
+            if (event.getButton() == MouseButton.PRIMARY) {
+                Book selectedBook = tableView.getSelectionModel().getSelectedItem();
+                if (selectedBook != null) {
+                    bookIdField.setText(selectedBook.getId_buku());
+                    isBookIdSet = true;  // Set flag to true after setting Book ID
+                }
+            }
+        });
+
         Scene scene = new Scene(root);
         primaryStage.setTitle("Borrow Book");
         primaryStage.setScene(scene);
@@ -232,6 +244,17 @@ public class BorrowBook extends Application {
 
         // Apply theme
         DarkLightMode.applyTheme(root);
+        // Apply dark mode to the table if dark theme is active
+        if (DarkLightMode.isDarkMode()) {
+            applyDarkModeToTable(tableView);
+        }
+    }
+
+    private void applyDarkModeToTable(TableView<Book> tableView) {
+        tableView.setStyle("-fx-background-color: #333333; -fx-text-fill: #ffffff; -fx-border-color: #444444;");
+        for (TableColumn<Book, ?> column : tableView.getColumns()) {
+            column.setStyle("-fx-background-color: #333333; -fx-text-fill: #ffffff; -fx-border-color: #444444;");
+        }
     }
 
     private void showPopupNotification(Stage ownerStage, String message) {

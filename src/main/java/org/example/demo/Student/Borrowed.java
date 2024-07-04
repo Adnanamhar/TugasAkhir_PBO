@@ -187,6 +187,17 @@ public class Borrowed extends Application {
 
         // Terapkan tema
         DarkLightMode.applyTheme(root);
+        // Apply dark mode to the table if dark theme is active
+        if (DarkLightMode.isDarkMode()) {
+            applyDarkModeToTable(tableView);
+        }
+    }
+
+    private void applyDarkModeToTable(TableView<Book> tableView) {
+        tableView.setStyle("-fx-background-color: #333333; -fx-text-fill: #ffffff; -fx-border-color: #444444;");
+        for (TableColumn<Book, ?> column : tableView.getColumns()) {
+            column.setStyle("-fx-background-color: #333333; -fx-text-fill: #ffffff; -fx-border-color: #444444;");
+        }
     }
 
     private void showPopupNotification(Stage ownerStage, String message) {
