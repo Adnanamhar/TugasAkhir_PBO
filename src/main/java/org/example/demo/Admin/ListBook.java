@@ -2,6 +2,8 @@ package org.example.demo.Admin;
 
 import javafx.application.Application;
 import javafx.collections.ObservableList;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.collections.FXCollections;
 import javafx.scene.Scene;
@@ -17,12 +19,26 @@ import org.example.demo.DarkLightMode;
 import org.example.demo.Database.Book;
 import org.example.demo.Database.User;
 
+import static org.example.demo.LoginAdmin.bgAll;
+
 public class ListBook extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
         AnchorPane root = new AnchorPane();
         root.setPrefSize(700, 500);
+
+        ImageView backgroundViews = new ImageView(new Image(bgAll));
+        backgroundViews.setPreserveRatio(false);
+
+        root.getChildren().add(backgroundViews);
+
+        root.widthProperty().addListener((obs, oldVal, newVal) -> {
+            backgroundViews.setFitWidth(newVal.doubleValue());
+        });
+        root.heightProperty().addListener((obs, oldVal, newVal) -> {
+            backgroundViews.setFitHeight(newVal.doubleValue());
+        });
 
         Label label = new Label("List Books");
         label.setLayoutX(264.0);

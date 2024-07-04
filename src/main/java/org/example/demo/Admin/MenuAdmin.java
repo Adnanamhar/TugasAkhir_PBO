@@ -1,6 +1,8 @@
 package org.example.demo.Admin;
 
 import javafx.application.Application;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -10,6 +12,8 @@ import javafx.scene.text.Font;
 import org.example.demo.DarkLightMode;
 import org.example.demo.LoginAdmin;
 
+import static org.example.demo.LoginAdmin.bgAll;
+
 public class MenuAdmin extends Application {
 
     @Override
@@ -17,6 +21,18 @@ public class MenuAdmin extends Application {
         // Create the AnchorPane
         AnchorPane root = new AnchorPane();
         root.setPrefSize(700, 500);
+
+        ImageView backgroundViews = new ImageView(new Image(bgAll));
+        backgroundViews.setPreserveRatio(false);
+
+        root.getChildren().add(backgroundViews);
+
+        root.widthProperty().addListener((obs, oldVal, newVal) -> {
+            backgroundViews.setFitWidth(newVal.doubleValue());
+        });
+        root.heightProperty().addListener((obs, oldVal, newVal) -> {
+            backgroundViews.setFitHeight(newVal.doubleValue());
+        });
 
         // Create the Labels
         Label titleLabel = new Label("Admin Menu");

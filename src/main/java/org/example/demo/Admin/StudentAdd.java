@@ -2,6 +2,8 @@ package org.example.demo.Admin;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -21,6 +23,8 @@ import org.example.demo.Database.Database;
 import org.example.demo.Database.Student;
 import org.example.demo.Database.User;
 
+import static org.example.demo.LoginAdmin.bgAll;
+
 public class StudentAdd extends Application {
 
     @Override
@@ -28,6 +32,18 @@ public class StudentAdd extends Application {
 
         AnchorPane root = new AnchorPane();
         root.setPrefSize(700, 500);
+
+        ImageView backgroundViews = new ImageView(new Image(bgAll));
+        backgroundViews.setPreserveRatio(false);
+
+        root.getChildren().add(backgroundViews);
+
+        root.widthProperty().addListener((obs, oldVal, newVal) -> {
+            backgroundViews.setFitWidth(newVal.doubleValue());
+        });
+        root.heightProperty().addListener((obs, oldVal, newVal) -> {
+            backgroundViews.setFitHeight(newVal.doubleValue());
+        });
 
         Label titleLabel = new Label("Add Student");
         titleLabel.setLayoutX(264.0);
