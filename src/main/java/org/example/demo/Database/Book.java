@@ -12,6 +12,13 @@ public class Book {
         this.category = category;
         this.stock = stock;
     }
+//    public Book(String idBuku, String title, String author, String category, int stock, int price) {
+//        id_buku = idBuku;
+//        this.title = title;
+//        this.author = author;
+//        this.category = category;
+//        this.stock = stock;
+//    }
 
     public String getId_buku() {
         return id_buku;

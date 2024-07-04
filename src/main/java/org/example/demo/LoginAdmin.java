@@ -2,6 +2,8 @@ package org.example.demo;
 
 import javafx.application.Application;
 import javafx.scene.control.PasswordField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -20,6 +22,7 @@ public class LoginAdmin extends Application {
 
     private int attempts = 0; // Jumlah percobaan
     private LocalDateTime lastAttemptTime; // Waktu terakhir kali percobaan
+    public static final String bgAll = "file:src/main/java/org/example/demo/Image/bgAll.png";
 
     @Override
     public void start(Stage primaryStage) {
@@ -27,6 +30,18 @@ public class LoginAdmin extends Application {
         // Create the AnchorPane
         AnchorPane root = new AnchorPane();
         root.setPrefSize(700, 500);
+
+        ImageView backgroundViews = new ImageView(new Image(bgAll));
+        backgroundViews.setPreserveRatio(false);
+
+        root.getChildren().add(backgroundViews);
+
+        root.widthProperty().addListener((obs, oldVal, newVal) -> {
+            backgroundViews.setFitWidth(newVal.doubleValue());
+        });
+        root.heightProperty().addListener((obs, oldVal, newVal) -> {
+            backgroundViews.setFitHeight(newVal.doubleValue());
+        });
 
         // Create the Labels
         Label titleLabel = new Label("Login Admin");

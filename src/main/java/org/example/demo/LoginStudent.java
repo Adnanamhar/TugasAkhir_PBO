@@ -7,6 +7,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -16,6 +18,8 @@ import javafx.stage.Stage;
 import org.example.demo.Database.User;
 import org.example.demo.Student.MenuStudent;
 
+import static org.example.demo.LoginAdmin.bgAll;
+
 public class LoginStudent extends Application {
     public static TextField nimTextField = new TextField();
 
@@ -24,6 +28,18 @@ public class LoginStudent extends Application {
 
         // Create the AnchorPane
         AnchorPane root = new AnchorPane();
+
+        ImageView backgroundViews = new ImageView(new Image(bgAll));
+        backgroundViews.setPreserveRatio(false);
+
+        root.getChildren().add(backgroundViews);
+
+        root.widthProperty().addListener((obs, oldVal, newVal) -> {
+            backgroundViews.setFitWidth(newVal.doubleValue());
+        });
+        root.heightProperty().addListener((obs, oldVal, newVal) -> {
+            backgroundViews.setFitHeight(newVal.doubleValue());
+        });
 
 
         // Create the Labels

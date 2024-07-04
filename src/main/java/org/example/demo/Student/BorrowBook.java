@@ -237,15 +237,16 @@ public class BorrowBook extends Application {
                             document.save(baos);
                             document.close();
 
-                            sendEmail.sendWithAttachment(Email1, subject, body, baos.toByteArray(), "Peminjaman_Buku.pdf");
-
                             if (LoginStudent.nimTextField.getText().equals("202310370311001")) {
                                 sendEmail.sendEmail(Email1, subject, body);
-                                showPopupNotification(primaryStage, "NIM: " + User.loginStudent + "\n Book Borrowed Successfully On: " + formattedDateTime + "\n Book Must Be Returned On: " + formattedReturnDate + " (7 Days)" + Email1);
+                                showPopupNotification(primaryStage, "NIM: " + User.loginStudent + "\n Book Borrowed Successfully On: " + formattedDateTime + "\n Book Must Be Returned On: " + formattedReturnDate + " (7 Days)" + "\n Email Succesfully Send To " + Email1);
+                                sendEmail.sendWithAttachment(Email1, subject, body, baos.toByteArray(), "Peminjaman_Buku.pdf");
 
                             } else {
                                 sendEmail.sendEmail(Email2, subject, body);
-                                showPopupNotification(primaryStage, "NIM: " + User.loginStudent + "\n Book Borrowed Successfully On: " + formattedDateTime + "\n Book Must Be Returned On: " + formattedReturnDate + " (7 Days)" + Email2);
+                                showPopupNotification(primaryStage, "NIM: " + User.loginStudent + "\n Book Borrowed Successfully On: " + formattedDateTime + "\n Book Must Be Returned On: " + formattedReturnDate + " (7 Days)" + "\n Email Succesfully Send To " + Email2);
+                                sendEmail.sendWithAttachment(Email2, subject, body, baos.toByteArray(), "Peminjaman_Buku.pdf");
+
                             }
                         } catch (IOException e) {
                             e.printStackTrace();
