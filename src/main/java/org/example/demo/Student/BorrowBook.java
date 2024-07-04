@@ -14,7 +14,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -97,12 +96,7 @@ public class BorrowBook extends Application {
         tableView.getColumns().addAll(column1, column2, column3, column4, column5);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        ObservableList<Book> bookData = FXCollections.observableArrayList();
-        for (Book book : User.books) {
-            if (book.getStock() > 0) {
-                bookData.add(book);
-            }
-        }
+        ObservableList<Book> bookData = FXCollections.observableArrayList(User.books);
         tableView.setItems(bookData);
 
         scrollPane.setContent(tableView);
@@ -148,11 +142,7 @@ public class BorrowBook extends Application {
 
                         // Update ObservableList to reflect the stock change
                         bookData.clear();
-                        for (Book b : User.books) {
-                            if (b.getStock() > 0) {
-                                bookData.add(b);
-                            }
-                        }
+                        bookData.addAll(User.books);
 
                         int indexBorrowBooks = -1;
                         for (int i = 0; i < User.borrowBooks.size(); i++) {
@@ -206,6 +196,9 @@ public class BorrowBook extends Application {
                             System.out.println("Error sending email");
                         }
                         return;
+                    } else {
+                        errorLabel.setText("Book empty");
+                        showPopupNotification(primaryStage, "Book empty");
                     }
                 }
             }
@@ -215,8 +208,6 @@ public class BorrowBook extends Application {
                 showPopupNotification(primaryStage, "Book ID not found");
             }
         });
-
-
 
         // Menambahkan key listener ke root untuk menangani tombol Enter
         root.setOnKeyPressed(event -> {
@@ -273,4 +264,3 @@ public class BorrowBook extends Application {
         launch(args);
     }
 }
-
