@@ -20,7 +20,6 @@ public class MenuStudent extends Application {
     public void start(Stage primaryStage) {
 
         AnchorPane root = new AnchorPane();
-        root.setPrefSize(700, 500);
 
         ImageView backgroundViews = new ImageView(new Image(bgAll));
         backgroundViews.setPreserveRatio(false);
@@ -35,14 +34,14 @@ public class MenuStudent extends Application {
         });
 
         Label titleLabel = new Label("Student Menu");
-        titleLabel.setLayoutX(243.0);
-        titleLabel.setLayoutY(60.0);
+        titleLabel.setLayoutX(620);
+        titleLabel.setLayoutY(250);
         titleLabel.setFont(new Font("System Bold", 36.0));
 
         Button logoutButton = new Button("Logout");
-        logoutButton.setLayoutX(14.0);
-        logoutButton.setLayoutY(446.0);
-        logoutButton.setPrefSize(119.0, 40.0);
+        logoutButton.setLayoutX(20);
+        logoutButton.setLayoutY(830);
+        logoutButton.setPrefSize(120, 40.0);
         logoutButton.setFont(new Font("System Bold", 14.0));
 
         logoutButton.setOnAction(actionEvent -> {
@@ -51,8 +50,8 @@ public class MenuStudent extends Application {
         });
 
         Button borrowBookButton = new Button("Borrow Book");
-        borrowBookButton.setLayoutX(275.0);
-        borrowBookButton.setLayoutY(172.0);
+        borrowBookButton.setLayoutX(650);
+        borrowBookButton.setLayoutY(350);
         borrowBookButton.setPrefSize(177.0, 68.0);
         borrowBookButton.setFont(new Font("System Bold", 18.0));
 
@@ -62,8 +61,8 @@ public class MenuStudent extends Application {
         });
 
         Button borrowedBookButton = new Button("Borrowed Book");
-        borrowedBookButton.setLayoutX(275.0);
-        borrowedBookButton.setLayoutY(277.0);
+        borrowedBookButton.setLayoutX(650);
+        borrowedBookButton.setLayoutY(450);
         borrowedBookButton.setPrefSize(177.0, 68.0);
         borrowedBookButton.setFont(new Font("System Bold", 18.0));
 
@@ -77,6 +76,8 @@ public class MenuStudent extends Application {
         Scene scene = new Scene(root);
         primaryStage.setTitle("Student Menu");
         primaryStage.setScene(scene);
+        primaryStage.setFullScreen(true);
+        primaryStage.setFullScreenExitHint("");
         primaryStage.show();
 
         // Apply theme
@@ -87,3 +88,7 @@ public class MenuStudent extends Application {
         launch(args);
     }
 }
+
+/*
+202310370311001
+ */

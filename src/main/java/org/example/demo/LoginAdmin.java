@@ -155,6 +155,12 @@ public class LoginAdmin extends Application {
         StackPane stackPane = new StackPane(vbox);
         stackPane.setAlignment(Pos.CENTER);
 
+        root.getChildren().add(stackPane);
+        AnchorPane.setTopAnchor(stackPane, 0.0);
+        AnchorPane.setRightAnchor(stackPane, 0.0);
+        AnchorPane.setBottomAnchor(stackPane, 0.0);
+        AnchorPane.setLeftAnchor(stackPane, 0.0);
+
         StackPane stackPanes = new StackPane(hBox);
         stackPanes.setAlignment(Pos.BOTTOM_LEFT);
 
@@ -163,12 +169,6 @@ public class LoginAdmin extends Application {
         AnchorPane.setRightAnchor(stackPanes, 0.0);
         AnchorPane.setBottomAnchor(stackPanes, 20.0);
         AnchorPane.setLeftAnchor(stackPanes, 20.0);
-
-        root.getChildren().add(stackPane);
-        AnchorPane.setTopAnchor(stackPane, 0.0);
-        AnchorPane.setRightAnchor(stackPane, 0.0);
-        AnchorPane.setBottomAnchor(stackPane, 0.0);
-        AnchorPane.setLeftAnchor(stackPane, 0.0);
 
         // Create the Scene and set it on the Stage
         Scene scene = new Scene(root);

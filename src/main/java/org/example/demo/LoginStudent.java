@@ -111,7 +111,7 @@ public class LoginStudent extends Application {
 
         Button adminLoginButton = new Button("Login Admin");
         adminLoginButton.setFont(new Font("System Bold", 14));
-        adminLoginButton.setPrefSize(100, 40);
+        adminLoginButton.setPrefSize(110, 40);
 
         adminLoginButton.setOnAction(actionEvent -> {
             LoginAdmin loginAdmin = new LoginAdmin();
@@ -129,6 +129,12 @@ public class LoginStudent extends Application {
         StackPane stackPane = new StackPane(vbox);
         stackPane.setAlignment(Pos.CENTER);
 
+        root.getChildren().add(stackPane);
+        AnchorPane.setTopAnchor(stackPane, 0.0);
+        AnchorPane.setRightAnchor(stackPane, 0.0);
+        AnchorPane.setBottomAnchor(stackPane, 0.0);
+        AnchorPane.setLeftAnchor(stackPane, 0.0);
+
         StackPane stackPanes = new StackPane(hBox);
         stackPanes.setAlignment(Pos.BOTTOM_LEFT);
 
@@ -138,11 +144,6 @@ public class LoginStudent extends Application {
         AnchorPane.setBottomAnchor(stackPanes, 20.0);
         AnchorPane.setLeftAnchor(stackPanes, 20.0);
 
-        root.getChildren().add(stackPane);
-        AnchorPane.setTopAnchor(stackPane, 0.0);
-        AnchorPane.setRightAnchor(stackPane, 0.0);
-        AnchorPane.setBottomAnchor(stackPane, 0.0);
-        AnchorPane.setLeftAnchor(stackPane, 0.0);
 
         Scene scene = new Scene(root);
         primaryStage.setTitle("Login Form");
