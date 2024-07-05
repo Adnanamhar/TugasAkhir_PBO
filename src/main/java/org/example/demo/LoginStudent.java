@@ -135,14 +135,9 @@ public class LoginStudent extends Application {
         AnchorPane.setBottomAnchor(stackPane, 0.0);
         AnchorPane.setLeftAnchor(stackPane, 0.0);
 
-        StackPane stackPanes = new StackPane(hBox);
-        stackPanes.setAlignment(Pos.BOTTOM_LEFT);
-
-        root.getChildren().add(stackPanes);
-        AnchorPane.setTopAnchor(stackPanes, 0.0);
-        AnchorPane.setRightAnchor(stackPanes, 0.0);
-        AnchorPane.setBottomAnchor(stackPanes, 20.0);
-        AnchorPane.setLeftAnchor(stackPanes, 20.0);
+        root.getChildren().add(adminLoginButton);
+        AnchorPane.setBottomAnchor(adminLoginButton, 20.0);
+        AnchorPane.setLeftAnchor(adminLoginButton, 20.0);
 
 
         Scene scene = new Scene(root);

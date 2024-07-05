@@ -26,7 +26,6 @@ public class ListBook extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         AnchorPane root = new AnchorPane();
-        root.setPrefSize(700, 500);
 
         ImageView backgroundViews = new ImageView(new Image(bgAll));
         backgroundViews.setPreserveRatio(false);
@@ -95,6 +94,8 @@ public class ListBook extends Application {
         Scene scene = new Scene(root);
         primaryStage.setTitle("List Student");
         primaryStage.setScene(scene);
+        primaryStage.setFullScreen(true);
+        primaryStage.setFullScreenExitHint("");
         primaryStage.show();
 
         // Apply theme

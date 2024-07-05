@@ -27,7 +27,6 @@ public class ListStudent extends Application {
     public void start(Stage primaryStage) {
         // Create the AnchorPane
         AnchorPane root = new AnchorPane();
-        root.setPrefSize(700, 500);
 
         ImageView backgroundViews = new ImageView(new Image(bgAll));
         backgroundViews.setPreserveRatio(false);
@@ -97,6 +96,8 @@ public class ListStudent extends Application {
         Scene scene = new Scene(root);
         primaryStage.setTitle("List Student");
         primaryStage.setScene(scene);
+        primaryStage.setFullScreen(true);
+        primaryStage.setFullScreenExitHint("");
         primaryStage.show();
 
         // Apply theme

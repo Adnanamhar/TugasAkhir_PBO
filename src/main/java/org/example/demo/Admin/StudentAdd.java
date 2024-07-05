@@ -31,7 +31,6 @@ public class StudentAdd extends Application {
     public void start(Stage primaryStage) {
 
         AnchorPane root = new AnchorPane();
-        root.setPrefSize(700, 500);
 
         ImageView backgroundViews = new ImageView(new Image(bgAll));
         backgroundViews.setPreserveRatio(false);
@@ -167,6 +166,8 @@ public class StudentAdd extends Application {
         Scene scene = new Scene(root);
         primaryStage.setTitle("Add Student");
         primaryStage.setScene(scene);
+        primaryStage.setFullScreen(true);
+        primaryStage.setFullScreenExitHint("");
         primaryStage.show();
 
         // Apply theme

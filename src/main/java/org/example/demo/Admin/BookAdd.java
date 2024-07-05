@@ -33,7 +33,6 @@ public class BookAdd extends Application {
     @Override
     public void start(Stage primaryStage) {
         AnchorPane root = new AnchorPane();
-        root.setPrefSize(700, 500);
 
         ImageView backgroundViews = new ImageView(new Image(bgAll));
         backgroundViews.setPreserveRatio(false);
@@ -177,8 +176,10 @@ public class BookAdd extends Application {
         );
 
         Scene scene = new Scene(root);
-        primaryStage.setScene(scene);
         primaryStage.setTitle("Book List");
+        primaryStage.setScene(scene);
+        primaryStage.setFullScreen(true);
+        primaryStage.setFullScreenExitHint("");
         primaryStage.show();
 
         // Apply theme

@@ -32,6 +32,7 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.example.demo.DarkLightMode;
 import org.example.demo.Database.Book;
 import org.example.demo.Database.Database;
+import org.example.demo.Database.Student;
 import org.example.demo.Database.User;
 import org.example.demo.LoginStudent;
 import org.example.demo.SendEmail;
@@ -196,13 +197,14 @@ public class BorrowBook extends Application {
 
                         try {
                             String subject = "Peminjaman Buku Berhasil!";
-                            String body = "Terimakasih telah berkunjung ke perpustakaan pusat UMM.\n"
+                            String body = "Terimakasih telah berkunjung ke E-Library.\n"
                                     + "Berikut lampiran tentang buku yang telah dipinjam :\n\n"
                                     + "Book ID    : " + book.getId_buku() + "\n"
                                     + "Title      : " + book.getTitle() + "\n"
                                     + "Category   : " + book.getCategory() + "\n"
                                     + "Duration of borrowing : " + " 7 days\n\n"
                                     + "Batas pengembalian   : " + LocalDate.now().plusDays(7) + "\n\n"
+                                    + "saat mengembalikan buku, mohon untuk menyertakan surat pengembalian buku berbentuk pdf dibawah ini. "
                                     + sendEmail.dateinfo();
 
                             // Create PDF
@@ -225,27 +227,31 @@ public class BorrowBook extends Application {
                             contentStream.newLineAtOffset(0, -45);
                             contentStream.showText("Berikut lampiran tentang buku yang telah dipinjam :");
                             contentStream.newLineAtOffset(0, -30);
-                            contentStream.showText("Book ID                         : " + book.getId_buku());
+                            contentStream.showText("Book ID                            : " + book.getId_buku());
                             contentStream.newLineAtOffset(0, -30);
-                            contentStream.showText("Title                           : " + book.getTitle());
+                            contentStream.showText("Title                                 : " + book.getTitle());
                             contentStream.newLineAtOffset(0, -30);
-                            contentStream.showText("Category                        : " + book.getCategory());
+                            contentStream.showText("Category                          : " + book.getCategory());
                             contentStream.newLineAtOffset(0, -30);
                             contentStream.showText("Duration of borrowing   : 7 days");
                             contentStream.newLineAtOffset(0, -30);
-                            contentStream.showText("Batas pengembalian       : " + LocalDate.now().plusDays(7));
-                            contentStream.newLineAtOffset(0, -250);
-                            contentStream.showText("NB : Batas peminjaman buku di perpustakaan e-Library maximal 7 hari");
+                            contentStream.showText("Batas pengembalian        : " + LocalDate.now().plusDays(7));
+                            contentStream.newLineAtOffset(0, -50);
+                            contentStream.showText("NB : Batas peminjaman buku di perpustakaan E-Library maksimal ");
                             contentStream.newLineAtOffset(0, -20);
-                            contentStream.showText("         dari hari peminjaman yaitu : " + LocalDate.now() + "Buku yang");
+                            contentStream.showText("         7 hari dari hari peminjaman yaitu : " + LocalDate.now() + ". Buku yang");
                             contentStream.newLineAtOffset(0, -20);
                             contentStream.showText("         telah melewati batas waktu peminjaman akan dikenakan sanksi");
                             contentStream.newLineAtOffset(0, -20);
                             contentStream.showText("         sesuai ketentuan yang berlaku.");
+                            contentStream.newLineAtOffset(0, -103);
+                            contentStream.showText("           Peminjam                                                       Admin E-Library");
+                            contentStream.newLineAtOffset(0, -120);
+                            contentStream.showText("     Mr. Fahmi Alfaqih                                              Mr. Adnan Amhar");
                             contentStream.newLineAtOffset(0, -70);
-                            contentStream.showText("For More Information Contact Us: ");
+                            contentStream.showText("                                For More Information Contact Us: ");
                             contentStream.newLineAtOffset(0, -30);
-                            contentStream.showText("WhatsApp : 082134079479 (Admin) ");
+                            contentStream.showText("                                WhatsApp : 082134079479 (Admin) ");
                             contentStream.endText();
 
                             contentStream.close();
